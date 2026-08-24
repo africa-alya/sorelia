@@ -16,7 +16,7 @@ donnée d'élève ne transite ni ne réside dans le dépôt.
 
 ## Décision
 
-Le dépôt `ALYA/sorelia` est **public**.
+Le dépôt `africa-alya/sorelia` est **public**.
 
 La protection de `main` prime sur la confidentialité du code source, parce que
 le risque qu'elle couvre est quotidien (un push direct casse le travail de

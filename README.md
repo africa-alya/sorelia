@@ -97,7 +97,7 @@ flutter devices
 ## Installation
 
 ```bash
-git clone https://github.com/ALYA/sorelia.git
+git clone https://github.com/africa-alya/sorelia.git
 cd sorelia
 flutter pub get
 ```
