@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Version figée par l'ADR-0002. Ne pas modifier ici sans mettre à jour
       # docs/adr/0002-version-flutter-figee.md et le README.
