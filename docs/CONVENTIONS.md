@@ -172,8 +172,8 @@ supprimer ensuite ne le révoque pas.
 - Clés de signature : `*.jks`, `*.keystore`, `key.properties`
 - Jetons d'API, mots de passe, fichiers `.env`
 - **Données réelles d'élèves** — les jeux de démonstration sont fictifs
-- Fichiers générés : `build/`, `.dart_tool/`, `*.g.dart` issus de build_runner
-  si le projet décide de ne pas les versionner
+- Fichiers générés : `build/`, `.dart_tool/`, et les `*.g.dart` produits par
+  `build_runner` ([ADR-0004](adr/0004-code-genere-non-versionne.md))
 
 Ces motifs sont dans le `.gitignore`. Si un secret est poussé malgré tout :
 **le révoquer immédiatement** (changer la clé), puis prévenir l'équipe. Le
