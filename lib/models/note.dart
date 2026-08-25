@@ -1,4 +1,4 @@
-class Note {
+class Score {
   final int? id;
   final int matiereId;
   final String typeEval; 
@@ -7,7 +7,7 @@ class Note {
   final String periode; 
   final DateTime date;
 
-  Note({
+  Score({
     this.id,
     required this.matiereId,
     required this.typeEval,
@@ -17,7 +17,7 @@ class Note {
     DateTime? date,
   }) : date = date ?? DateTime.now();
 
-  // Note ramenée sur 20 pour comparaison uniforme entre matières.
+  // Score ramenée sur 20 pour comparaison uniforme entre matières.
   double get valeurNormalisee => (valeur / bareme) * 20;
 
   Map<String, dynamic> toMap() {
@@ -32,8 +32,8 @@ class Note {
     };
   }
 
-  factory Note.fromMap(Map<String, dynamic> map) {
-    return Note(
+  factory Score.fromMap(Map<String, dynamic> map) {
+    return Score(
       id: map['id'] as int?,
       matiereId: map['matiere_id'] as int,
       typeEval: map['type_eval'] as String,

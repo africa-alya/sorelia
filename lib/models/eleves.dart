@@ -1,4 +1,4 @@
-class Eleves {
+class Student{
   final int? id;
   final String pseudonyme;
   final String codePin;
@@ -8,7 +8,7 @@ class Eleves {
   final String? serie;
   final DateTime dateCreation;
 
-  Eleves({
+  Student({
     this.id,
     required this.pseudonyme,
     required this.codePin,
@@ -32,8 +32,8 @@ class Eleves {
     };
   }
 
-  factory Eleves.fromMap(Map<String, dynamic> map) {
-    return Eleves(
+  factory Student.fromMap(Map<String, dynamic> map) {
+    return Student(
       id: map['id'] as int?,
       pseudonyme: map['pseudonyme'] as String,
       codePin: map['code_pin'] as String,

@@ -1,4 +1,4 @@
-class Matiere {
+class Matter {
   final int? id;
   final int eleveId; // non présent explicitement dans le CCT (table mono-élève
   // sur l'appareil) mais conservé pour cohérence relationnelle locale.
@@ -6,7 +6,7 @@ class Matiere {
   final String serie;
   final double coefficient;
 
-  Matiere({
+  Matter({
     this.id,
     required this.eleveId,
     required this.nom,
@@ -24,8 +24,8 @@ class Matiere {
     };
   }
 
-  factory Matiere.fromMap(Map<String, dynamic> map) {
-    return Matiere(
+  factory Matter.fromMap(Map<String, dynamic> map) {
+    return Matter(
       id: map['id'] as int?,
       eleveId: map['eleve_id'] as int,
       nom: map['nom'] as String,

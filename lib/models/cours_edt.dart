@@ -1,4 +1,4 @@
-class CoursEDT {
+class Cours {
   final int? id;
   final int eleveId;
   final String jour; 
@@ -7,7 +7,7 @@ class CoursEDT {
   final String matiere;
   final String? salle;
 
-  CoursEDT({
+  Cours({
     this.id,
     required this.eleveId,
     required this.jour,
@@ -29,8 +29,8 @@ class CoursEDT {
     };
   }
 
-  factory CoursEDT.fromMap(Map<String, dynamic> map) {
-    return CoursEDT(
+  factory Cours.fromMap(Map<String, dynamic> map) {
+    return Cours(
       id: map['id'] as int?,
       eleveId: map['eleve_id'] as int,
       jour: map['jour'] as String,

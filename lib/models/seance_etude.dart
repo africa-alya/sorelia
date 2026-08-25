@@ -1,4 +1,4 @@
-class SeanceEtude {
+class Etude {
   final int? id;
   final int eleveId;
   final String matiere;
@@ -10,7 +10,7 @@ class SeanceEtude {
   final int pauses; 
   final bool termine;
 
-  SeanceEtude({
+  Etude({
     this.id,
     required this.eleveId,
     required this.matiere,
@@ -38,8 +38,8 @@ class SeanceEtude {
     };
   }
 
-  factory SeanceEtude.fromMap(Map<String, dynamic> map) {
-    return SeanceEtude(
+  factory Etude.fromMap(Map<String, dynamic> map) {
+    return Etude(
       id: map['id'] as int?,
       eleveId: map['eleve_id'] as int,
       matiere: map['matiere'] as String,
