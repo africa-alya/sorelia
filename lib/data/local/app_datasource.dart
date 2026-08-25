@@ -1,27 +1,17 @@
 import 'package:drift/drift.dart';
-import '../../models/eleves.dart';
-import '../../models/coefficient_ref.dart';
-import '../../services/security_pin.dart';
-import '../../models/note.dart';
-import '../../models/matiere.dart';
-import '../../models/seance_etude.dart';
-import '../../models/cours_edt.dart';
-import '../../models/notification_rappel.dart';
+import '../../domain/entities/models/eleves.dart';
+import '../../domain/entities/models/coefficient_ref.dart';
+//import '../../domain/services/security_pin.dart';
+import '../../domain/entities/models/note.dart';
+import '../../domain/entities/models/matiere.dart';
+import '../../domain/entities/models/seance_etude.dart';
+import '../../domain/entities/models/cours_edt.dart';
+import '../../domain/entities/models/notification_rappel.dart';
 import 'app_database.dart' as drift;
 import 'package:drift/drift.dart' show Value;
 
 
 
-// Import préfixé : Drift génère une classe `Eleve`, `Matiere`, `Note`...
-// à partir des tables `Eleves`, `Matieres`, `Notes`... qui entreraient en
-// collision directe avec nos classes métier du même nom (models/eleve.dart,
-// etc.) si on les importait sans préfixe.
-
-
-
-
-/// Façade au-dessus d'AppDatabase (Drift) : garde la même API publique
-/// que l'ancienne version SQL brut, pour qu'aucun écran n'ait à changer.
 class DatabaseHelper {
   DatabaseHelper._internal() : db = drift.AppDatabase();
   static final DatabaseHelper instance = DatabaseHelper._internal();
@@ -106,21 +96,21 @@ class DatabaseHelper {
         ));
   }
 
-  /// Authentifie par pseudonyme + PIN. Le PIN est haché avant comparaison
-  /// (CCT §6.2) : jamais de comparaison en clair.
-  Future<Student?> authentifier(String pseudonyme, String pinClair) async {
-    final hashed = PinSecurity.hashPin(pinClair);
-    final query = db.select(db.eleves)
-      ..where((t) => t.pseudonyme.equals(pseudonyme) & t.codePin.equals(hashed));
-    final row = await query.getSingleOrNull();
-    return row == null ? null : _eleveFromRow(row);
-  }
-
-  Future<Student?> getEleveById(int id) async {
-    final query = db.select(db.eleves)..where((t) => t.id.equals(id));
-    final row = await query.getSingleOrNull();
-    return row == null ? null : _eleveFromRow(row);
-  }
+  /// Authentifie par pseudonyme + PIN. 
+  
+  //La sécurisation APDP et PBKDF2 sera le sujet complet des US du Sprint 2 (US-005 et US-007).
+  
+  //Future<Student?> getEleveById(int id) async {
+  //  final query = db.select(db.eleves)..where((t) => t.id.equals(id));
+  //  final row = await query.getSingleOrNull();
+   // return row == null ? null : _eleveFromRow(row);
+  //} 
+  Future<Student?> authentifier(String pseudonyme, String pin) async {
+  final query = db.select(db.eleves)
+    ..where((t) => t.pseudonyme.equals(pseudonyme) & t.codePin.equals(pin));
+  final row = await query.getSingleOrNull();
+  return row == null ? null : _eleveFromRow(row);
+}
 
   Future<bool> pseudonymeExiste(String pseudonyme) async {
     final query = db.select(db.eleves)..where((t) => t.pseudonyme.equals(pseudonyme));
@@ -138,8 +128,8 @@ class DatabaseHelper {
         .toList();
   }
 
-  /// Cherche le coefficient officiel d'une matière pour un niveau/série
-  /// donnés ; retourne 1.0 par défaut si absent de la table de référence.
+  // Cherche le coefficient officiel d'une matière pour un niveau/série
+  //donnés ; retourne 1.0 par défaut si absent de la table de référence.
   Future<double> getCoefficientPourMatiere({required String niveau, required String serie, required String nomMatiere}) async {
     final query = db.select(db.coefficientRefs)
       ..where((t) => t.niveau.equals(niveau) & t.serie.equals(serie) & t.matiere.equals(nomMatiere));
@@ -195,29 +185,12 @@ class DatabaseHelper {
     await (db.delete(db.notes)..where((t) => t.id.equals(id))).go();
   }
 
-  /// Moyenne de matière = moyenne simple des notes ramenées sur 20.
-  Future<double?> getMoyenneMatiere(int matiereId) async {
-    final notes = await getNotesPourMatiere(matiereId);
-    if (notes.isEmpty) return null;
-    final somme = notes.fold<double>(0, (acc, n) => acc + n.valeurNormalisee);
-    return somme / notes.length;
-  }
+  // Moyenne de matière = moyenne simple des notes ramenées sur 20.
+  
+  //Sprint a venir.....
 
   /// Moyenne générale pondérée par les coefficients des matières.
-  Future<double?> getMoyenneGenerale(int eleveId) async {
-    final matieres = await getMatieres(eleveId);
-    double sommePonderee = 0;
-    double totalCoef = 0;
-    for (final m in matieres) {
-      final moyenne = await getMoyenneMatiere(m.id!);
-      if (moyenne != null) {
-        sommePonderee += moyenne * m.coefficient;
-        totalCoef += m.coefficient;
-      }
-    }
-    if (totalCoef == 0) return null;
-    return sommePonderee / totalCoef;
-  }
+ //Sprint a venir.....
 
   // ---------- COURS_EDT (emploi du temps) ----------
 

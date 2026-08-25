@@ -8,7 +8,7 @@ part 'app_database.g.dart';
 
 // --- DÉFINITIONS DES TABLES DRIFT ---
 // Chaque `tableName` est forcé explicitement pour rester identique,
-// caractère pour caractère, au dictionnaire de données du CCT §6.3
+// caractère pour caractère, au dictionnaire de données du CCT 
 // (sinon Drift utiliserait le nom de classe tel quel, ici au pluriel).
 
 class Eleves extends Table {
@@ -94,10 +94,9 @@ class SeanceEtudes extends Table {
 }
 
 class NotificationConfigs extends Table {
-  // NB : le CCT §6.3 nomme cette table `notification`. On garde ici le nom
+  //  On garde ici le nom
   // de classe NotificationConfigs (pour éviter toute confusion avec la
-  // classe Flutter Notification), mais le tableName ci-dessous force le
-  // vrai nom SQL à être strictement conforme au dictionnaire de données.
+  // classe Flutter Notification), 
   @override
   String get tableName => 'notification';
 
@@ -108,7 +107,7 @@ class NotificationConfigs extends Table {
   IntColumn get delaiMin => integer().withDefault(const Constant(10))();
 
   // Typé booléen (au lieu d'un IntColumn 0/1) pour profiter du typage
-  // Drift côté Dart, conformément au CCT §5 ("requêtes typées").
+  // Drift côté Dart.
   BoolColumn get active => boolean().withDefault(const Constant(true))();
 
   TextColumn get heuresSilence => text().nullable()();
@@ -141,9 +140,7 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  /// Jeu illustratif de coefficients pour le prototype (CCT §6.2, §15.3).
-  /// À REMPLACER par les barèmes officiels MEMP/MESTFP validés avant
-  /// déploiement — voir CCT §15, point 3.
+
   Future<void> _seedCoefficientRef() async {
     final seeds = [
       CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'Mathématiques', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MEMP')),
