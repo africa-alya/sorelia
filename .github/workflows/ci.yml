@@ -1,0 +1,71 @@
+name: CI
+
+# Se déclenche sur chaque Pull Request vers main, et sur main après fusion.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Le robot n'a besoin que de lire le dépôt.
+permissions:
+  contents: read
+
+# Si de nouveaux commits arrivent pendant qu'une exécution tourne,
+# on annule la précédente : inutile de vérifier du code déjà remplacé.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qualite:
+    name: Format, analyse et tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+
+      # Version figée par l'ADR-0002. Ne pas modifier ici sans mettre à jour
+      # docs/adr/0002-version-flutter-figee.md et le README.
+      - name: Installer Flutter 3.47.1
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.1
+          channel: stable
+          cache: true
+
+      - name: Afficher la chaîne d'outils
+        run: flutter --version
+
+      - name: Installer les dépendances
+        run: flutter pub get
+
+      # Drift génère du code (*.g.dart). L'étape est ignorée tant que
+      # build_runner n'est pas dans le pubspec.
+      - name: Générer le code (Drift)
+        run: |
+          if grep -qE '^\s{2}build_runner:' pubspec.yaml; then
+            dart run build_runner build --delete-conflicting-outputs
+          else
+            echo "build_runner absent du pubspec — étape ignorée."
+          fi
+
+      # Ne se déclenche que si du code généré est versionné ET périmé.
+      # Si *.g.dart est ignoré par Git, cette étape passe toujours.
+      - name: Le code généré versionné est-il à jour ?
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Du code généré versionné n'est plus à jour. Lance 'dart run build_runner build --delete-conflicting-outputs' et committe le résultat."
+            exit 1
+          fi
+
+      - name: Vérifier le formatage
+        run: dart format --output=none --set-exit-if-changed $(git ls-files '*.dart' ':!:*.g.dart')
+
+      - name: Analyse statique
+        run: flutter analyze --fatal-infos
+
+      - name: Tests
+        run: flutter test

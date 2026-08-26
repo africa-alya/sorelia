@@ -100,11 +100,21 @@ flutter devices
 git clone https://github.com/africa-alya/sorelia.git
 cd sorelia
 flutter pub get
+dart run build_runner build --delete-conflicting-outputs
 ```
 
 `flutter pub get` télécharge les dépendances listées dans `pubspec.yaml`, aux
 versions exactes verrouillées dans `pubspec.lock`. Ne jamais modifier
 `pubspec.lock` à la main.
+
+`build_runner` génère le code de la base de données (Drift) à partir des
+définitions de tables. **Ces fichiers ne sont pas versionnés**
+([ADR-0004](docs/adr/0004-code-genere-non-versionne.md)) : il faut donc lancer
+cette commande après le clone, puis **après chaque `git pull` qui touche au
+schéma**.
+
+> Si ton éditeur affiche soudain des centaines d'erreurs sur des fichiers
+> `*.g.dart` introuvables, c'est ça : relance la commande, elles disparaissent.
 
 ---
 
@@ -218,6 +228,7 @@ un choix.
 | [0001](docs/adr/0001-depot-public.md) | Dépôt GitHub public |
 | [0002](docs/adr/0002-version-flutter-figee.md) | Version de la chaîne d'outils figée |
 | [0003](docs/adr/0003-application-id.md) | `applicationId` = `bj.alya.sorelia` |
+| [0004](docs/adr/0004-code-genere-non-versionne.md) | Le code généré n'est pas versionné |
 
 ---
 
