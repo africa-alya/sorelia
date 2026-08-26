@@ -1,7 +1,7 @@
 class NotificationRappel {
   final int? id;
-  final String cibleType; 
-  final int cibleId; 
+  final String cibleType;
+  final int cibleId;
   final String type; // DEBUT, FIN ou PAUSE
   final int delaiMin; // anticipation en minutes (5, 10, 15...)
   final bool active;

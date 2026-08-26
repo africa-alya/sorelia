@@ -1,9 +1,9 @@
 class Cours {
   final int? id;
   final int eleveId;
-  final String jour; 
-  final String creneauDebut; 
-  final String creneauFin; 
+  final String jour;
+  final String creneauDebut;
+  final String creneauFin;
   final String matiere;
   final String? salle;
 
@@ -43,5 +43,12 @@ class Cours {
 }
 
 class JourSemaine {
-  static const values = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI'];
+  static const values = [
+    'LUNDI',
+    'MARDI',
+    'MERCREDI',
+    'JEUDI',
+    'VENDREDI',
+    'SAMEDI',
+  ];
 }

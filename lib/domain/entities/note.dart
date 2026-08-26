@@ -1,10 +1,10 @@
 class Score {
   final int? id;
   final int matiereId;
-  final String typeEval; 
-  final double valeur; 
-  final double bareme; 
-  final String periode; 
+  final String typeEval;
+  final double valeur;
+  final double bareme;
+  final String periode;
   final DateTime date;
 
   Score({

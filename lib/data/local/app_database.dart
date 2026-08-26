@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -8,7 +9,7 @@ part 'app_database.g.dart';
 
 // --- DÉFINITIONS DES TABLES DRIFT ---
 // Chaque `tableName` est forcé explicitement pour rester identique,
-// caractère pour caractère, au dictionnaire de données du CCT 
+// caractère pour caractère, au dictionnaire de données du CCT
 // (sinon Drift utiliserait le nom de classe tel quel, ici au pluriel).
 
 class Eleves extends Table {
@@ -17,6 +18,10 @@ class Eleves extends Table {
 
   IntColumn get id => integer().autoIncrement()();
   TextColumn get pseudonyme => text().withLength(min: 1, max: 50)();
+
+  /// Empreinte **hachée** du PIN, jamais le PIN en clair (CCT §6.3).
+  /// Le hachage relève de la couche appelante : US-005 (création de compte)
+  /// et US-007 (déverrouillage). Cette couche ne fait que persister.
   TextColumn get codePin => text()();
   TextColumn get telephone => text().nullable()();
   TextColumn get niveau => text()();
@@ -42,7 +47,8 @@ class Matieres extends Table {
   String get tableName => 'matiere';
 
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get eleveId => integer().references(Eleves, #id, onDelete: KeyAction.cascade)();
+  IntColumn get eleveId =>
+      integer().references(Eleves, #id, onDelete: KeyAction.cascade)();
   TextColumn get nom => text()();
   TextColumn get serie => text()();
   RealColumn get coefficient => real()();
@@ -53,9 +59,18 @@ class Notes extends Table {
   String get tableName => 'note';
 
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get matiereId => integer().references(Matieres, #id, onDelete: KeyAction.cascade)();
+  IntColumn get matiereId =>
+      integer().references(Matieres, #id, onDelete: KeyAction.cascade)();
   TextColumn get typeEval => text()();
-  RealColumn get valeur => real()();
+
+  /// CCT §6.3 : la note est comprise entre 0 et le barème.
+  /// Exprimé en SQL brut plutôt qu'avec `check()`, dont la forme auto-
+  /// référente déclenche la règle d'analyse `recursive_getters`.
+  /// `customConstraint` remplaçant toutes les contraintes, le NOT NULL
+  /// doit être répété ici.
+  RealColumn get valeur => real().customConstraint(
+    'NOT NULL CHECK (valeur >= 0 AND valeur <= bareme)',
+  )();
   RealColumn get bareme => real().withDefault(const Constant(20.0))();
   TextColumn get periode => text()();
   TextColumn get date => text()();
@@ -66,7 +81,8 @@ class CoursEdts extends Table {
   String get tableName => 'cours_edt';
 
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get eleveId => integer().references(Eleves, #id, onDelete: KeyAction.cascade)();
+  IntColumn get eleveId =>
+      integer().references(Eleves, #id, onDelete: KeyAction.cascade)();
   TextColumn get jour => text()();
   TextColumn get creneauDebut => text()();
   TextColumn get creneauFin => text()();
@@ -79,7 +95,8 @@ class SeanceEtudes extends Table {
   String get tableName => 'seance_etude';
 
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get eleveId => integer().references(Eleves, #id, onDelete: KeyAction.cascade)();
+  IntColumn get eleveId =>
+      integer().references(Eleves, #id, onDelete: KeyAction.cascade)();
   TextColumn get matiere => text()();
   TextColumn get date => text()();
   TextColumn get heureDebut => text()();
@@ -96,7 +113,7 @@ class SeanceEtudes extends Table {
 class NotificationConfigs extends Table {
   //  On garde ici le nom
   // de classe NotificationConfigs (pour éviter toute confusion avec la
-  // classe Flutter Notification), 
+  // classe Flutter Notification),
   @override
   String get tableName => 'notification';
 
@@ -115,17 +132,23 @@ class NotificationConfigs extends Table {
 
 // --- BASE DE DONNÉES DRIFT ---
 
-@DriftDatabase(tables: [
-  Eleves,
-  CoefficientRefs,
-  Matieres,
-  Notes,
-  CoursEdts,
-  SeanceEtudes,
-  NotificationConfigs,
-])
+@DriftDatabase(
+  tables: [
+    Eleves,
+    CoefficientRefs,
+    Matieres,
+    Notes,
+    CoursEdts,
+    SeanceEtudes,
+    NotificationConfigs,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
+
+  /// Base éphémère en mémoire, pour les tests : pas de fichier, pas de
+  /// `path_provider` à simuler, et un état neuf à chaque test.
+  AppDatabase.enMemoire(super.executor);
 
   @override
   int get schemaVersion => 1;
@@ -137,26 +160,125 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
         await _seedCoefficientRef();
       },
+      // Aucune migration n'existe encore. Échouer bruyamment vaut mieux que
+      // laisser la base d'un élève dans un état incohérent : à la première
+      // montée de schemaVersion, il faudra écrire la migration ici.
+      onUpgrade: (Migrator m, int from, int to) async {
+        throw UnimplementedError(
+          'Migration $from -> $to non implémentée. '
+          'Voir docs/adr/ avant de faire évoluer le schéma.',
+        );
+      },
+      // SQLite n'applique PAS les clés étrangères par défaut, Drift non plus.
+      // Sans ce PRAGMA, les `onDelete: KeyAction.cascade` ci-dessus sont
+      // inertes et supprimer un élève laisserait ses notes orphelines
+      // (US-033, droit à l'effacement).
+      beforeOpen: (OpeningDetails details) async {
+        await customStatement('PRAGMA foreign_keys = ON');
+      },
     );
   }
 
-
   Future<void> _seedCoefficientRef() async {
     final seeds = [
-      CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'Mathématiques', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MEMP')),
-      CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'Français', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MEMP')),
-      CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'Physique-Chimie', coefficient: 2.0, versionSource: const Value('Illustratif - à valider MEMP')),
-      CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'SVT', coefficient: 2.0, versionSource: const Value('Illustratif - à valider MEMP')),
-      CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'Anglais', coefficient: 2.0, versionSource: const Value('Illustratif - à valider MEMP')),
-      CoefficientRefsCompanion.insert(niveau: '3e', serie: 'TRONC_COMMUN', matiere: 'Histoire-Géographie', coefficient: 2.0, versionSource: const Value('Illustratif - à valider MEMP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'D', matiere: 'Mathématiques', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'D', matiere: 'SVT', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'D', matiere: 'Physique-Chimie', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'D', matiere: 'Français', coefficient: 2.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'C', matiere: 'Mathématiques', coefficient: 6.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'C', matiere: 'Physique-Chimie', coefficient: 5.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'A', matiere: 'Français', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MESTFP')),
-      CoefficientRefsCompanion.insert(niveau: 'Tle', serie: 'A', matiere: 'Philosophie', coefficient: 4.0, versionSource: const Value('Illustratif - à valider MESTFP')),
+      CoefficientRefsCompanion.insert(
+        niveau: '3e',
+        serie: 'TRONC_COMMUN',
+        matiere: 'Mathématiques',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MEMP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: '3e',
+        serie: 'TRONC_COMMUN',
+        matiere: 'Français',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MEMP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: '3e',
+        serie: 'TRONC_COMMUN',
+        matiere: 'Physique-Chimie',
+        coefficient: 2.0,
+        versionSource: const Value('Illustratif - à valider MEMP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: '3e',
+        serie: 'TRONC_COMMUN',
+        matiere: 'SVT',
+        coefficient: 2.0,
+        versionSource: const Value('Illustratif - à valider MEMP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: '3e',
+        serie: 'TRONC_COMMUN',
+        matiere: 'Anglais',
+        coefficient: 2.0,
+        versionSource: const Value('Illustratif - à valider MEMP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: '3e',
+        serie: 'TRONC_COMMUN',
+        matiere: 'Histoire-Géographie',
+        coefficient: 2.0,
+        versionSource: const Value('Illustratif - à valider MEMP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'D',
+        matiere: 'Mathématiques',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'D',
+        matiere: 'SVT',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'D',
+        matiere: 'Physique-Chimie',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'D',
+        matiere: 'Français',
+        coefficient: 2.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'C',
+        matiere: 'Mathématiques',
+        coefficient: 6.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'C',
+        matiere: 'Physique-Chimie',
+        coefficient: 5.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'A',
+        matiere: 'Français',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
+      CoefficientRefsCompanion.insert(
+        niveau: 'Tle',
+        serie: 'A',
+        matiere: 'Philosophie',
+        coefficient: 4.0,
+        versionSource: const Value('Illustratif - à valider MESTFP'),
+      ),
     ];
 
     await batch((b) {

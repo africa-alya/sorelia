@@ -34,12 +34,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  path_provider: ^2.1.6
-  sqflite: ^2.4.3
-  crypto: ^3.0.7
-  flutter_secure_storage: ^11.0.0
+
+  # Base locale (ADR / CCT §5) : Drift au-dessus de SQLite.
   drift: ^2.34.3
   sqlite3_flutter_libs: ^0.6.0+eol
+  path_provider: ^2.1.6
   path: ^1.9.1
 
 dev_dependencies:

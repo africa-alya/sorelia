@@ -1,4 +1,4 @@
-class Student{
+class Student {
   final int? id;
   final String pseudonyme;
   final String codePin;
@@ -51,5 +51,4 @@ class TypeEnseignement {
   static const general = 'GENERAL';
   static const technique = 'TECHNIQUE';
   static const values = [general, technique];
-
 }

@@ -3,11 +3,11 @@ class Etude {
   final int eleveId;
   final String matiere;
   final DateTime date;
-  final String heureDebut; 
+  final String heureDebut;
   final int dureeMin;
   final String? objectif;
   final String? recurrence;
-  final int pauses; 
+  final int pauses;
   final bool termine;
 
   Etude({
@@ -57,6 +57,12 @@ class Etude {
   //  pour programmer la notification locale correspondante.
   DateTime get dateTimeDebut {
     final parts = heureDebut.split(':');
-    return DateTime(date.year, date.month, date.day, int.parse(parts[0]), int.parse(parts[1]));
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+    );
   }
 }
