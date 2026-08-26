@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
+import 'package:drift_flutter/drift_flutter.dart';
 
 part 'app_database.g.dart';
 
@@ -287,10 +283,7 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'sorelia.db'));
-    return NativeDatabase.createInBackground(file);
-  });
-}
+/// Ouvre `sorelia.sqlite` dans le dossier de données de l'application.
+/// `driftDatabase` embarque la bibliothèque SQLite native et résout
+/// l'emplacement du fichier lui-même, sur toutes les plateformes.
+QueryExecutor _openConnection() => driftDatabase(name: 'sorelia');

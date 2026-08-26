@@ -100,7 +100,7 @@ flutter devices
 git clone https://github.com/africa-alya/sorelia.git
 cd sorelia
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 `flutter pub get` télécharge les dépendances listées dans `pubspec.yaml`, aux

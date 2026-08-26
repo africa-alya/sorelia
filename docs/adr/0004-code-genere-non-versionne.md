@@ -17,7 +17,7 @@ Les fichiers générés (`*.g.dart`) **ne sont pas versionnés**. Ils sont dans 
 `.gitignore` et chacun les régénère localement :
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 La CI exécute la même commande avant d'analyser et de tester.

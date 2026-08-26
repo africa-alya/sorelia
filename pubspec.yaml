@@ -35,11 +35,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-  # Base locale (ADR / CCT §5) : Drift au-dessus de SQLite.
+  # Base locale (CCT §5) : Drift au-dessus de SQLite.
+  # drift_flutter embarque la bibliothèque SQLite native et choisit
+  # l'emplacement du fichier ; il remplace sqlite3_flutter_libs, dont la
+  # version 0.6.0+eol ne fournit plus rien.
   drift: ^2.34.3
-  sqlite3_flutter_libs: ^0.6.0+eol
-  path_provider: ^2.1.6
-  path: ^1.9.1
+  drift_flutter: ^0.3.1
 
 dev_dependencies:
   flutter_test:
