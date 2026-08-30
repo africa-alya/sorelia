@@ -34,7 +34,7 @@ migrate_working_dir/
 /coverage/
 
 # Code généré par build_runner (Drift). Non versionné : voir ADR-0004.
-# Le régénérer avec : dart run build_runner build --delete-conflicting-outputs
+# Le régénérer avec : dart run build_runner build
 *.g.dart
 
 # Symbolication related
