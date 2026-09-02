@@ -54,7 +54,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   Text(
                                     "Hors ligne · données enregistrées sur l'appareil",
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 10,
                                       color: Color(0xFF4A3E2C),
                                     ),
                                   ),

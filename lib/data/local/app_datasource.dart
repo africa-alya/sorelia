@@ -114,7 +114,7 @@ class DatabaseHelper {
     return (await query.get()).isNotEmpty;
   }
 
-  Future<List<Student?>> getAllEleves() async {
+  Future<List<Student>> getAllEleves() async {
   final query = db.select(db.eleves)
     ..orderBy([(t) => OrderingTerm(expression: t.dateCreation)]);
   final rows = await query.get();

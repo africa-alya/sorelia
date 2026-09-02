@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'screens/onboarding.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const SoreliaApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SoreliaApp extends StatelessWidget {
+  const SoreliaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
