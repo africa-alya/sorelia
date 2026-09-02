@@ -8,6 +8,7 @@ import 'package:sorelia/data/local/app_database.dart';
 /// Chaque test ouvre une base neuve en mémoire : pas de fichier sur le disque,
 /// pas de plugin natif à simuler, aucun état partagé d'un test à l'autre.
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late AppDatabase db;
 
   setUp(() {

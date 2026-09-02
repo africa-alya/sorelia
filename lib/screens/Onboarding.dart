@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sorelia/screens/connexion.dart';
+import 'package:sorelia/screens/inscription.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -21,9 +23,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +81,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 6),
                           const Text(
                             "Suivi · Orientation · Avenir",
                             textAlign: TextAlign.center,
@@ -128,7 +128,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             height: 52,
                             child: ElevatedButton(
                               onPressed: () {
-                                
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return const InscriptionPage();
+                                    },
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: primaryColor,
@@ -157,7 +164,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             height: 52,
                             child: TextButton(
                               onPressed: () {
-                                // Action : Connexion
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return const ConnexionPage();
+                                    },
+                                  ),
+                                );
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: primaryColor,

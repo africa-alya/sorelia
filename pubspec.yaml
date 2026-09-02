@@ -41,6 +41,7 @@ dependencies:
   # version 0.6.0+eol ne fournit plus rien.
   drift: ^2.34.3
   drift_flutter: ^0.3.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
 
   assets:
     - assets/logos/onboarding.png
+    - assets/coefficients/coefficientref.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

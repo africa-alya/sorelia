@@ -114,6 +114,13 @@ class DatabaseHelper {
     return (await query.get()).isNotEmpty;
   }
 
+  Future<List<Student?>> getAllEleves() async {
+  final query = db.select(db.eleves)
+    ..orderBy([(t) => OrderingTerm(expression: t.dateCreation)]);
+  final rows = await query.get();
+  return rows.map(_eleveFromRow).toList();
+}
+
   // ---------- COEFFICIENT_REF ----------
 
   Future<List<CoefficientRef>> getCoefficientsRef({
@@ -154,6 +161,15 @@ class DatabaseHelper {
     final row = await query.getSingleOrNull();
     return row?.coefficient ?? 1.0;
   }
+
+  Future<List<String>> getSeriesDisponibles(String niveau) async {
+  final query = db.select(db.coefficientRefs)
+    ..where((t) => t.niveau.equals(niveau));
+  final rows = await query.get();
+  final series = rows.map((r) => r.serie).toSet().toList();
+  series.sort();
+  return series;
+}
 
   // ---------- MATIERE ----------
 
