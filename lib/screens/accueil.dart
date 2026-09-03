@@ -4,13 +4,12 @@ import 'package:sorelia/domain/entities/eleves.dart';
 
 class AccueilPage extends StatefulWidget {
   final int? eleveId;
-  const AccueilPage({super.key,this.eleveId});
+  const AccueilPage({super.key, this.eleveId});
   @override
   State<AccueilPage> createState() => _AccueilPageState();
 }
 
 class _AccueilPageState extends State<AccueilPage> {
-
   Student? _eleve;
 
   @override
@@ -25,16 +24,12 @@ class _AccueilPageState extends State<AccueilPage> {
     final eleve = await DatabaseHelper.instance.getEleveById(id);
     setState(() => _eleve = eleve);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:const Text("Sorélia"),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Text("Bienvenu ${_eleve?.pseudonyme ?? 'User'}"),
-      ),
+      appBar: AppBar(title: const Text("Sorélia"), centerTitle: true),
+      body: Center(child: Text("Bienvenu ${_eleve?.pseudonyme ?? 'User'}")),
     );
   }
 }

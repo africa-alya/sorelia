@@ -261,13 +261,13 @@ class ConnexionPageState extends State<ConnexionPage> {
                   TextButton(
                     onPressed: () {
                       Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return const InscriptionPage();
-                                    },
-                                  ),
-                                );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const InscriptionPage();
+                          },
+                        ),
+                      );
                     },
                     child: const Text(
                       "Créer un nouveau compte",
@@ -368,13 +368,11 @@ class ConnexionPageState extends State<ConnexionPage> {
       return;
     }
 
-    
     final prefs = await SharedPreferences.getInstance();
     if (_eleveSelectionne!.id != null) {
       await prefs.setInt('dernier_eleve_id', _eleveSelectionne!.id!);
     }
 
-    
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(

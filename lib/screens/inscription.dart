@@ -34,7 +34,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   bool _isConfirmPinObscured = true;
 
   // Valeurs sélectionnées par défaut
-  String _selectedTeachingType ='GENERAL';
+  String _selectedTeachingType = 'GENERAL';
   String _niveau = '3e';
   String? _serie;
 
@@ -44,9 +44,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
   @override
   void initState() {
-  super.initState();
-  _chargerSeries(_niveau); // charge les séries dès l'ouverture
-}
+    super.initState();
+    _chargerSeries(_niveau); // charge les séries dès l'ouverture
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,17 +230,16 @@ class _InscriptionPageState extends State<InscriptionPage> {
               ),
 
               if (_error != null) ...[
-              const SizedBox(height: 16),
-              Text(
-                _error!,
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 13,
-                  fontFamily: "Montserrat",
+                const SizedBox(height: 16),
+                Text(
+                  _error!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 13,
+                    fontFamily: "Montserrat",
+                  ),
                 ),
-              ),
-            ],
-              
+              ],
 
               const SizedBox(height: 50),
 
@@ -259,14 +258,25 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     ),
                   ),
                   child: _loading
-                  ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text("Créer mon compte", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: "Montserrat"))
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          "Créer mon compte",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Montserrat",
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 16),
-
-              
-              
             ],
           ),
         ),
@@ -359,7 +369,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
       // Contrainte d'unicité, pas de l'authentification : deux comptes ne
       // peuvent pas partager le même pseudonyme sur cet appareil.
-      final existeDeja = await DatabaseHelper.instance.pseudonymeExiste(pseudonyme);
+      final existeDeja = await DatabaseHelper.instance.pseudonymeExiste(
+        pseudonyme,
+      );
       if (existeDeja) {
         setState(() {
           _loading = false;
@@ -370,11 +382,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
       // L'authentification par PIN (comparaison, hachage salé, limitation des
       // tentatives, réinitialisation) relève d'US-005 et US-007, sprint 2.
-      
+
       final eleve = Student(
         pseudonyme: pseudonyme,
         codePin: _pinController.text.trim(),
-        telephone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
+        telephone: _phoneController.text.trim().isEmpty
+            ? null
+            : _phoneController.text.trim(),
         niveau: _niveau,
         typeEnseignement: _selectedTeachingType,
         serie: _serie,
@@ -391,9 +405,9 @@ class _InscriptionPageState extends State<InscriptionPage> {
         const SnackBar(content: Text('Compte créé avec succès !')),
       );
       Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) =>const ConnexionPage()),  
-      (route) => false,
-    );
+        MaterialPageRoute(builder: (_) => const ConnexionPage()),
+        (route) => false,
+      );
     } catch (e) {
       setState(() {
         _loading = false;

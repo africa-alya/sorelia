@@ -1,9 +1,9 @@
 import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:flutter/services.dart' show rootBundle;  
+import 'package:flutter/services.dart' show rootBundle;
 part 'app_database.g.dart';
-
 
 // --- DÉFINITIONS DES TABLES DRIFT ---
 // Chaque `tableName` est forcé explicitement pour rester identique,
@@ -178,9 +178,11 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> _seedCoefficientRef() async {
-    final jsonString = await rootBundle.loadString('assets/coefficients/coefficientref.json');
+    final jsonString = await rootBundle.loadString(
+      'assets/coefficients/coefficientref.json',
+    );
     final List<dynamic> lignes = jsonDecode(jsonString);
- 
+
     final seeds = lignes.map((ligne) {
       final l = ligne as Map<String, dynamic>;
       return CoefficientRefsCompanion.insert(
