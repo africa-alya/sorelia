@@ -1,7 +1,12 @@
 class Student {
   final int? id;
   final String pseudonyme;
-  final String codePin;
+
+  /// Empreinte produite par `PinService.hacher`, **jamais le PIN en clair**
+  /// (CCT §6.3). Le champ porte ce nom pour que le compilateur refuse tout
+  /// point d'appel qui y glisserait la saisie brute de l'élève.
+  final String empreintePin;
+
   final String? telephone;
   final String niveau;
   final String typeEnseignement;
@@ -11,7 +16,7 @@ class Student {
   Student({
     this.id,
     required this.pseudonyme,
-    required this.codePin,
+    required this.empreintePin,
     this.telephone,
     required this.niveau,
     required this.typeEnseignement,
@@ -23,7 +28,8 @@ class Student {
     return {
       'id': id,
       'pseudonyme': pseudonyme,
-      'code_pin': codePin,
+      // La colonne SQL garde le nom du dictionnaire de données du CCT.
+      'code_pin': empreintePin,
       'telephone': telephone,
       'niveau': niveau,
       'type_enseignement': typeEnseignement,
@@ -36,7 +42,7 @@ class Student {
     return Student(
       id: map['id'] as int?,
       pseudonyme: map['pseudonyme'] as String,
-      codePin: map['code_pin'] as String,
+      empreintePin: map['code_pin'] as String,
       telephone: map['telephone'] as String?,
       niveau: map['niveau'] as String,
       typeEnseignement: map['type_enseignement'] as String,
