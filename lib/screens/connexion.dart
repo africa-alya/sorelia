@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sorelia/core/security/limiteur_tentatives.dart';
 import 'package:sorelia/core/security/pin_service.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
@@ -165,6 +166,10 @@ class ConnexionPageState extends State<ConnexionPage> {
                     controller: _pinController,
                     obscureText: _obscurePin,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(PinService.longueurPin),
+                    ],
                     decoration: InputDecoration(
                       hintText: "Saisis ton code PIN",
                       hintStyle: const TextStyle(

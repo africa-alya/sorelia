@@ -28,6 +28,15 @@ import 'package:pointycastle/export.dart';
 abstract final class PinService {
   PinService._();
 
+  /// Longueur imposée au code PIN, en chiffres. Source unique de la règle :
+  /// les écrans de création de compte et de connexion s'y réfèrent.
+  ///
+  /// Quatre chiffres est un choix produit assumé — les utilisateurs sont des
+  /// collégiens et lycéens — et non une valeur de sécurité. Voir l'ADR-0005 :
+  /// aucune longueur numérique ne résiste à une attaque hors ligne, c'est la
+  /// limitation des tentatives qui protège.
+  static const int longueurPin = 4;
+
   /// Identifiant d'algorithme préfixant chaque empreinte.
   static const String algorithme = 'pbkdf2_sha256';
 

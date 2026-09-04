@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sorelia/core/security/pin_service.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
@@ -38,6 +39,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
   String _selectedTeachingType = 'GENERAL';
   String _niveau = '3e';
   String? _serie;
+
+  // Le clavier numérique n'empêche pas de coller des lettres : on filtre la
+  // saisie elle-même, et on la borne à la longueur attendue.
+  static final _formateursPin = [
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(PinService.longueurPin),
+  ];
 
   // Liste deroulante
   final List<String> _teachingTypes = ['GENERAL', 'TECHNIQUE'];
@@ -178,9 +186,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     },
                   ),
                 ),
+                inputFormatters: _formateursPin,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Veuillez entrer un code PIN";
+                  }
+                  if (value.length != PinService.longueurPin) {
+                    return "Le code PIN doit contenir "
+                        "exactement ${PinService.longueurPin} chiffres";
                   }
                   return null;
                 },
@@ -210,6 +223,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                     },
                   ),
                 ),
+                inputFormatters: _formateursPin,
                 validator: (value) {
                   if (value != _pinController.text) {
                     return "Les codes PIN ne correspondent pas";
