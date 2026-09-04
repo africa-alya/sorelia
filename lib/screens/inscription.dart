@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sorelia/core/security/pin_service.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
 import 'package:sorelia/screens/connexion.dart';
@@ -380,12 +381,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
         return;
       }
 
-      // L'authentification par PIN (comparaison, hachage salé, limitation des
-      // tentatives, réinitialisation) relève d'US-005 et US-007, sprint 2.
-
+      // Le PIN ne quitte jamais cet écran en clair : seule son empreinte est
+      // persistée (ADR-0005). Le hachage tourne dans un isolate, d'où l'await
+      // — l'indicateur de chargement du bouton couvre déjà cette attente.
       final eleve = Student(
         pseudonyme: pseudonyme,
-        codePin: _pinController.text.trim(),
+        empreintePin: await PinService.hacher(_pinController.text.trim()),
         telephone: _phoneController.text.trim().isEmpty
             ? null
             : _phoneController.text.trim(),

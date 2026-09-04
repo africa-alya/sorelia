@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sorelia/core/security/limiteur_tentatives.dart';
+import 'package:sorelia/core/security/pin_service.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +24,11 @@ class ConnexionPageState extends State<ConnexionPage> {
   final TextEditingController _pinController = TextEditingController();
   bool _obscurePin = true;
   String? _error;
+
+  /// Vraie pendant la dérivation du PIN. Celle-ci prend plusieurs centaines de
+  /// millisecondes, voire davantage sur un téléphone d'entrée de gamme
+  /// (ADR-0005) : sans retour visuel, l'élève croirait le bouton mort.
+  bool _verificationEnCours = false;
 
   @override
   void dispose() {
@@ -237,7 +244,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     width: double.infinity,
                     height: 58,
                     child: ElevatedButton(
-                      onPressed: _seConnecter,
+                      onPressed: _verificationEnCours ? null : _seConnecter,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryDark,
                         foregroundColor: Colors.white,
@@ -246,13 +253,22 @@ class ConnexionPageState extends State<ConnexionPage> {
                           borderRadius: BorderRadius.circular(24.0),
                         ),
                       ),
-                      child: const Text(
-                        "Se connecter",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      child: _verificationEnCours
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              "Se connecter",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -350,10 +366,12 @@ class ConnexionPageState extends State<ConnexionPage> {
     setState(() => _error = null);
 
     //  Vérification de la sélection de l'élève
-    if (_eleveSelectionne == null) {
+    final eleve = _eleveSelectionne;
+    if (eleve?.id == null) {
       setState(() => _error = 'Veuillez sélectionner un compte.');
       return;
     }
+    final eleveId = eleve!.id!;
 
     //  Vérification de la saisie du PIN
     final pinSaisi = _pinController.text.trim();
@@ -362,22 +380,47 @@ class ConnexionPageState extends State<ConnexionPage> {
       return;
     }
 
-    // Verification de la validité du PIN
-    if (pinSaisi != _eleveSelectionne!.codePin) {
-      setState(() => _error = 'Code PIN incorrect.');
+    // Le compte est-il encore sous le coup d'un blocage ? Contrôlé avant toute
+    // dérivation : inutile de payer le coût du hachage pour refuser ensuite.
+    final blocage = await LimiteurTentatives.blocageRestant(eleveId);
+    if (blocage != null) {
+      if (!mounted) return;
+      setState(
+        () => _error =
+            'Trop de tentatives. Réessaie dans '
+            '${LimiteurTentatives.enClair(blocage)}.',
+      );
       return;
     }
 
-    final prefs = await SharedPreferences.getInstance();
-    if (_eleveSelectionne!.id != null) {
-      await prefs.setInt('dernier_eleve_id', _eleveSelectionne!.id!);
+    setState(() => _verificationEnCours = true);
+    final correct = await PinService.verifier(pinSaisi, eleve.empreintePin);
+    if (!mounted) return;
+    setState(() => _verificationEnCours = false);
+
+    if (!correct) {
+      final nouveauBlocage = await LimiteurTentatives.enregistrerEchec(eleveId);
+      final essais = await LimiteurTentatives.essaisAvantBlocage(eleveId);
+      if (!mounted) return;
+      setState(() {
+        _error = nouveauBlocage != null
+            ? 'Code PIN incorrect. Compte bloqué pendant '
+                  '${LimiteurTentatives.enClair(nouveauBlocage)}.'
+            : 'Code PIN incorrect. Encore $essais essai'
+                  '${essais > 1 ? 's' : ''} avant blocage.';
+      });
+      return;
     }
+
+    // Le compteur d'échecs ne retombe que sur une connexion réussie.
+    await LimiteurTentatives.reinitialiser(eleveId);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('dernier_eleve_id', eleveId);
 
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (_) => AccueilPage(eleveId: _eleveSelectionne!.id!),
-      ),
+      MaterialPageRoute(builder: (_) => AccueilPage(eleveId: eleveId)),
       (route) => false,
     );
   }

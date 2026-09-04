@@ -129,4 +129,7 @@ inscrit dans chaque empreinte.
   les développeurs désinstallent simplement l'application. On ne prévoit jamais
   de repli sur une comparaison en clair.
 - US-007 doit livrer la limitation des tentatives pour que cette décision ait
-  la portée annoncée.
+  la portée annoncée. *Livrée depuis dans
+  `lib/core/security/limiteur_tentatives.dart` : blocages de 30 s, 2 min, 5 min
+  puis 15 min tous les 5 échecs, compteur remis à zéro par la seule connexion
+  réussie.*
