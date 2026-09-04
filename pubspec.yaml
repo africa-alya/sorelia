@@ -43,6 +43,10 @@ dependencies:
   drift_flutter: ^0.3.1
   shared_preferences: ^2.5.5
 
+  # Hachage du code PIN (CCT §6.3, ADR-0005). Dart pur, sans dépendance
+  # native : la CI Linux exécute PBKDF2 tel quel, sans chaîne de compilation.
+  pointycastle: ^4.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

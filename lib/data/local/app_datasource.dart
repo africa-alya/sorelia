@@ -20,7 +20,7 @@ class DatabaseHelper {
   Student _eleveFromRow(drift.Eleve r) => Student(
     id: r.id,
     pseudonyme: r.pseudonyme,
-    codePin: r.codePin,
+    empreintePin: r.codePin,
     telephone: r.telephone,
     niveau: r.niveau,
     typeEnseignement: r.typeEnseignement,
@@ -88,7 +88,7 @@ class DatabaseHelper {
         .insert(
           drift.ElevesCompanion.insert(
             pseudonyme: e.pseudonyme,
-            codePin: e.codePin,
+            codePin: e.empreintePin,
             telephone: Value(e.telephone),
             niveau: e.niveau,
             typeEnseignement: e.typeEnseignement,
@@ -104,9 +104,9 @@ class DatabaseHelper {
     return row == null ? null : _eleveFromRow(row);
   }
 
-  // L'authentification par PIN (comparaison, hachage salé, limitation des
-  // tentatives, réinitialisation) relève d'US-005 et US-007, sprint 2.
-  // Elle n'a pas sa place dans cette couche d'accès aux données.
+  // Le hachage du PIN vit dans `lib/core/security/pin_service.dart` : cette
+  // couche ne fait que persister l'empreinte qu'on lui donne. La limitation
+  // des tentatives et la réinitialisation relèvent d'US-007.
 
   Future<bool> pseudonymeExiste(String pseudonyme) async {
     final query = db.select(db.eleves)

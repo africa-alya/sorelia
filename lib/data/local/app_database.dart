@@ -18,8 +18,10 @@ class Eleves extends Table {
   TextColumn get pseudonyme => text().withLength(min: 1, max: 50)();
 
   /// Empreinte **hachée** du PIN, jamais le PIN en clair (CCT §6.3).
-  /// Le hachage relève de la couche appelante : US-005 (création de compte)
-  /// et US-007 (déverrouillage). Cette couche ne fait que persister.
+  /// Le hachage relève de `lib/core/security/pin_service.dart` ; cette couche
+  /// ne fait que persister. Le nom de colonne SQL (`code_pin`) reste celui du
+  /// dictionnaire de données du CCT, côté Dart l'entité `Student` parle
+  /// d'`empreintePin`.
   TextColumn get codePin => text()();
   TextColumn get telephone => text().nullable()();
   TextColumn get niveau => text()();
