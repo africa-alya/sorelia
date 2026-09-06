@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-
+import 'package:flutter/services.dart' show rootBundle;
 part 'app_database.g.dart';
 
 // --- DÉFINITIONS DES TABLES DRIFT ---
@@ -178,106 +180,21 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> _seedCoefficientRef() async {
-    final seeds = [
-      CoefficientRefsCompanion.insert(
-        niveau: '3e',
-        serie: 'TRONC_COMMUN',
-        matiere: 'Mathématiques',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MEMP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: '3e',
-        serie: 'TRONC_COMMUN',
-        matiere: 'Français',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MEMP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: '3e',
-        serie: 'TRONC_COMMUN',
-        matiere: 'Physique-Chimie',
-        coefficient: 2.0,
-        versionSource: const Value('Illustratif - à valider MEMP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: '3e',
-        serie: 'TRONC_COMMUN',
-        matiere: 'SVT',
-        coefficient: 2.0,
-        versionSource: const Value('Illustratif - à valider MEMP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: '3e',
-        serie: 'TRONC_COMMUN',
-        matiere: 'Anglais',
-        coefficient: 2.0,
-        versionSource: const Value('Illustratif - à valider MEMP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: '3e',
-        serie: 'TRONC_COMMUN',
-        matiere: 'Histoire-Géographie',
-        coefficient: 2.0,
-        versionSource: const Value('Illustratif - à valider MEMP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'D',
-        matiere: 'Mathématiques',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'D',
-        matiere: 'SVT',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'D',
-        matiere: 'Physique-Chimie',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'D',
-        matiere: 'Français',
-        coefficient: 2.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'C',
-        matiere: 'Mathématiques',
-        coefficient: 6.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'C',
-        matiere: 'Physique-Chimie',
-        coefficient: 5.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'A',
-        matiere: 'Français',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-      CoefficientRefsCompanion.insert(
-        niveau: 'Tle',
-        serie: 'A',
-        matiere: 'Philosophie',
-        coefficient: 4.0,
-        versionSource: const Value('Illustratif - à valider MESTFP'),
-      ),
-    ];
+    final jsonString = await rootBundle.loadString(
+      'assets/coefficients/coefficientref.json',
+    );
+    final List<dynamic> lignes = jsonDecode(jsonString);
+
+    final seeds = lignes.map((ligne) {
+      final l = ligne as Map<String, dynamic>;
+      return CoefficientRefsCompanion.insert(
+        niveau: l['niveau'] as String,
+        serie: l['serie'] as String,
+        matiere: l['matiere'] as String,
+        coefficient: (l['coefficient'] as num).toDouble(),
+        versionSource: Value(l['version_source'] as String?),
+      );
+    }).toList();
 
     await batch((b) {
       b.insertAll(coefficientRefs, seeds);

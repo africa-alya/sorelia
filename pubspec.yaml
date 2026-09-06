@@ -41,6 +41,7 @@ dependencies:
   # version 0.6.0+eol ne fournit plus rien.
   drift: ^2.34.3
   drift_flutter: ^0.3.1
+  shared_preferences: ^2.5.5
 
   # Hachage du code PIN (CCT §6.3, ADR-0005). Dart pur, sans dépendance
   # native : la CI Linux exécute PBKDF2 tel quel, sans chaîne de compilation.
@@ -69,6 +70,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/logos/onboarding.png
+    - assets/coefficients/coefficientref.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -100,3 +105,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+          weight: 400
+
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
+          weight: 500
+
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.ttf
+          weight: 600
+
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
+          weight: 700
