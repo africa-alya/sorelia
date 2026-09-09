@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/onboarding.dart';
+import 'screens/accueil.dart';
 
 void main() {
   runApp(const SoreliaApp());
@@ -22,7 +22,8 @@ class SoreliaApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const OnboardingPage(),
+      //home: const OnboardingPage(),
+      home: const  AccueilPage(),
     );
   }
 }

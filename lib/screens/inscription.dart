@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sorelia/core/security/pin_service.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
-import 'package:sorelia/screens/connexion.dart';
+import 'package:sorelia/screens/confidence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InscriptionPage extends StatefulWidget {
@@ -177,8 +177,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isPinObscured
-                          ? Icons.remove_red_eye_outlined
-                          : Icons.visibility_off_outlined,
+                          ? Icons.visibility_off_outlined
+                          : Icons.remove_red_eye_outlined,
                       color: primaryColor,
                     ),
                     onPressed: () {
@@ -212,8 +212,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _isConfirmPinObscured
-                          ? Icons.remove_red_eye_outlined
-                          : Icons.visibility_off_outlined,
+                          ? Icons.visibility_off_outlined
+                          : Icons.remove_red_eye_outlined,
                       color: primaryColor,
                     ),
                     onPressed: () {
@@ -399,15 +399,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
       // persistée (ADR-0005). Le hachage tourne dans un isolate, d'où l'await
       // — l'indicateur de chargement du bouton couvre déjà cette attente.
       final eleve = Student(
-        pseudonyme: pseudonyme,
-        empreintePin: await PinService.hacher(_pinController.text.trim()),
-        telephone: _phoneController.text.trim().isEmpty
-            ? null
-            : _phoneController.text.trim(),
-        niveau: _niveau,
-        typeEnseignement: _selectedTeachingType,
-        serie: _serie,
-      );
+  pseudonyme: pseudonyme,
+  empreintePin: await PinService.hacher(_pinController.text.trim()),
+  telephone: _phoneController.text.trim().isEmpty
+      ? null
+      : _phoneController.text.trim(),
+  niveau: _niveau,
+  typeEnseignement: _selectedTeachingType,
+);
 
       final id = await DatabaseHelper.instance.createEleve(eleve);
       //await PinSecurity.saveSession(id);
@@ -418,9 +417,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Compte créé avec succès !')),
+        
       );
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const ConnexionPage()),
+        MaterialPageRoute(builder: (_) => const ConfidencePage()),
         (route) => false,
       );
     } catch (e) {

@@ -197,8 +197,8 @@ class ConnexionPageState extends State<ConnexionPage> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePin
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
+                              ? Icons.visibility_off_outlined
+                              : Icons.remove_red_eye_outlined,
                           color: primaryDark,
                         ),
                         onPressed: () {
@@ -247,7 +247,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                   const SizedBox(height: 75),
                   SizedBox(
                     width: double.infinity,
-                    height: 58,
+                    height: 42,
                     child: ElevatedButton(
                       onPressed: _verificationEnCours ? null : _seConnecter,
                       style: ElevatedButton.styleFrom(
@@ -258,22 +258,13 @@ class ConnexionPageState extends State<ConnexionPage> {
                           borderRadius: BorderRadius.circular(24.0),
                         ),
                       ),
-                      child: _verificationEnCours
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Text(
-                              "Se connecter",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                      child: const Text(
+                        "Se connecter",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -293,7 +284,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     child: const Text(
                       "Créer un nouveau compte",
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 16,
 
                         fontWeight: FontWeight.bold,
                         color: primaryDark,
@@ -370,7 +361,7 @@ class ConnexionPageState extends State<ConnexionPage> {
     // Réinitialiser l'erreur précédente
     setState(() => _error = null);
 
-    //  Vérification de la sélection de l'élève
+    // 1. Vérification de la sélection de l'élève
     final eleve = _eleveSelectionne;
     if (eleve?.id == null) {
       setState(() => _error = 'Veuillez sélectionner un compte.');
@@ -378,42 +369,22 @@ class ConnexionPageState extends State<ConnexionPage> {
     }
     final eleveId = eleve!.id!;
 
-    //  Vérification de la saisie du PIN
+    // 2. Vérification de la saisie du PIN
     final pinSaisi = _pinController.text.trim();
     if (pinSaisi.isEmpty) {
       setState(() => _error = 'Veuillez saisir votre code PIN.');
       return;
     }
 
-    // Le compte est-il encore sous le coup d'un blocage ? Contrôlé avant toute
-    // dérivation : inutile de payer le coût du hachage pour refuser ensuite.
-    final blocage = await LimiteurTentatives.blocageRestant(eleveId);
-    if (blocage != null) {
-      if (!mounted) return;
-      setState(
-        () => _error =
-            'Trop de tentatives. Réessaie dans '
-            '${LimiteurTentatives.enClair(blocage)}.',
-      );
-      return;
-    }
+    // 3. Vérification de la validité du PIN via le PinService (CORRECTION ICI)
+    final pinValide = await PinService.verifier(pinSaisi, eleve.empreintePin);
 
-    setState(() => _verificationEnCours = true);
-    final correct = await PinService.verifier(pinSaisi, eleve.empreintePin);
-    if (!mounted) return;
-    setState(() => _verificationEnCours = false);
+    if (!pinValide) {
+      // Optionnel : incrémenter le compteur d'échecs (US-007)
+      await LimiteurTentatives.enregistrerEchec(eleveId);
 
-    if (!correct) {
-      final nouveauBlocage = await LimiteurTentatives.enregistrerEchec(eleveId);
-      final essais = await LimiteurTentatives.essaisAvantBlocage(eleveId);
       if (!mounted) return;
-      setState(() {
-        _error = nouveauBlocage != null
-            ? 'Code PIN incorrect. Compte bloqué pendant '
-                  '${LimiteurTentatives.enClair(nouveauBlocage)}.'
-            : 'Code PIN incorrect. Encore $essais essai'
-                  '${essais > 1 ? 's' : ''} avant blocage.';
-      });
+      setState(() => _error = 'Code PIN incorrect.');
       return;
     }
 
