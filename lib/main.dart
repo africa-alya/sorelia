@@ -23,7 +23,7 @@ class SoreliaApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const OnboardingPage(),
-      home: const  AccueilPage(),
+      home: const AccueilPage(),
     );
   }
 }
