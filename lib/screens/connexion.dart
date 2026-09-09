@@ -29,7 +29,7 @@ class ConnexionPageState extends State<ConnexionPage> {
   /// Vraie pendant la dérivation du PIN. Celle-ci prend plusieurs centaines de
   /// millisecondes, voire davantage sur un téléphone d'entrée de gamme
   /// (ADR-0005) : sans retour visuel, l'élève croirait le bouton mort.
-  bool _verificationEnCours = false;
+  final bool _verificationEnCours = false;
 
   @override
   void dispose() {
