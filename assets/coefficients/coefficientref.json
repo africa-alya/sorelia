@@ -1,0 +1,450 @@
+[
+  {
+    "niveau": "6e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Mathématiques",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "6e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Français",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "6e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Physique-Chimie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "6e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "6e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "6e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "5e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Mathématiques",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "5e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Français",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "5e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Physique-Chimie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "5e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "5e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "5e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "4e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Mathématiques",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "4e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Français",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "4e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Physique-Chimie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "4e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "4e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "4e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "3e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Mathématiques",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "3e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Français",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "3e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Physique-Chimie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "3e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "3e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "3e",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MEMP"
+  },
+  {
+    "niveau": "2nde",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Mathématiques",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "2nde",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Français",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "2nde",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Physique-Chimie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "2nde",
+    "serie": "TRONC_COMMUN",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "2nde",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "2nde",
+    "serie": "TRONC_COMMUN",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "A",
+    "matiere": "Français",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "A",
+    "matiere": "Philosophie",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "A",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "A",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "C",
+    "matiere": "Mathématiques",
+    "coefficient": 6,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "C",
+    "matiere": "Physique-Chimie",
+    "coefficient": 5,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "C",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "D",
+    "matiere": "Mathématiques",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "D",
+    "matiere": "SVT",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "D",
+    "matiere": "Physique-Chimie",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "D",
+    "matiere": "Français",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "F",
+    "matiere": "Mathématiques",
+    "coefficient": 5,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "F",
+    "matiere": "Technologie",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "F",
+    "matiere": "Physique-Chimie",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "G",
+    "matiere": "Mathématiques",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "G",
+    "matiere": "Comptabilité",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "1ere",
+    "serie": "G",
+    "matiere": "Economie",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "A",
+    "matiere": "Français",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "A",
+    "matiere": "Philosophie",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "A",
+    "matiere": "Histoire-Géographie",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "A",
+    "matiere": "Anglais",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "C",
+    "matiere": "Mathématiques",
+    "coefficient": 6,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "C",
+    "matiere": "Physique-Chimie",
+    "coefficient": 5,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "C",
+    "matiere": "SVT",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "D",
+    "matiere": "Mathématiques",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "D",
+    "matiere": "SVT",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "D",
+    "matiere": "Physique-Chimie",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "D",
+    "matiere": "Français",
+    "coefficient": 2,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "F",
+    "matiere": "Mathématiques",
+    "coefficient": 5,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "F",
+    "matiere": "Technologie",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "F",
+    "matiere": "Physique-Chimie",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "G",
+    "matiere": "Mathématiques",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "G",
+    "matiere": "Comptabilité",
+    "coefficient": 4,
+    "version_source": "Illustratif - à valider MESTFP"
+  },
+  {
+    "niveau": "Tle",
+    "serie": "G",
+    "matiere": "Economie",
+    "coefficient": 3,
+    "version_source": "Illustratif - à valider MESTFP"
+  }
+]
