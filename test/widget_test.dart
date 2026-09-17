@@ -1,15 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sorelia/main.dart';
+import 'package:sorelia/main.dart'; // Ajuste l'import si nécessaire
 
 void main() {
   testWidgets('Onboarding page smoke test', (WidgetTester tester) async {
-    // Charge l'application avec le const requis
+    // Charge l'application
     await tester.pumpWidget(const SoreliaApp());
 
-    // Attend la fin des animations et chargements initiaux
-    await tester.pumpAndSettle();
-
-    // Vérifie qu'au moins un widget est présent à l'écran
-    expect(find.byType(SoreliaApp), findsOneWidget);
+    // Vérifie que le titre de bienvenue s'affiche correctement
+    expect(find.text('Bienvenue sur Sorélia'), findsOneWidget);
   });
 }

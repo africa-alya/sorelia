@@ -406,6 +406,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
             : _phoneController.text.trim(),
         niveau: _niveau,
         typeEnseignement: _selectedTeachingType,
+        serie: _serie,
       );
 
       final id = await DatabaseHelper.instance.createEleve(eleve);
