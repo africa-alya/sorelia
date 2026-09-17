@@ -197,8 +197,8 @@ class ConnexionPageState extends State<ConnexionPage> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePin
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
+                              ? Icons.visibility_off_outlined
+                              : Icons.remove_red_eye_outlined,
                           color: primaryDark,
                         ),
                         onPressed: () {
@@ -293,7 +293,7 @@ class ConnexionPageState extends State<ConnexionPage> {
                     child: const Text(
                       "Créer un nouveau compte",
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 16,
 
                         fontWeight: FontWeight.bold,
                         color: primaryDark,
