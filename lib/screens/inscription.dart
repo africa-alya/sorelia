@@ -399,15 +399,14 @@ class _InscriptionPageState extends State<InscriptionPage> {
       // persistée (ADR-0005). Le hachage tourne dans un isolate, d'où l'await
       // — l'indicateur de chargement du bouton couvre déjà cette attente.
       final eleve = Student(
-        pseudonyme: pseudonyme,
-        empreintePin: await PinService.hacher(_pinController.text.trim()),
-        telephone: _phoneController.text.trim().isEmpty
-            ? null
-            : _phoneController.text.trim(),
-        niveau: _niveau,
-        typeEnseignement: _selectedTeachingType,
-        serie: _serie,
-      );
+  pseudonyme: pseudonyme,
+  empreintePin: await PinService.hacher(_pinController.text.trim()),
+  telephone: _phoneController.text.trim().isEmpty
+      ? null
+      : _phoneController.text.trim(),
+  niveau: _niveau,
+  typeEnseignement: _selectedTeachingType,
+);
 
       final id = await DatabaseHelper.instance.createEleve(eleve);
       //await PinSecurity.saveSession(id);
@@ -418,6 +417,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Compte créé avec succès !')),
+        
       );
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const ConfidencePage()),

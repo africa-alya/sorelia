@@ -45,19 +45,22 @@ class ConfidencePage extends StatelessWidget {
                       _InfoCard(
                         icon: Icons.lock_outline,
                         title: 'Données locales',
-                        description: 'Tes notes, ta moyenne et ton emploi du temps restent enregistrés uniquement sur ce téléphone.',
+                        description:
+                            'Tes notes, ta moyenne et ton emploi du temps restent enregistrés uniquement sur ce téléphone.',
                       ),
                       SizedBox(height: 16),
                       _InfoCard(
                         icon: Icons.shield_outlined,
                         title: 'Zéro internet requis',
-                        description: 'L\'application fonctionne à 100% hors ligne. Aucune donnée n\'est envoyée à des serveurs externes.',
+                        description:
+                            'L\'application fonctionne à 100% hors ligne. Aucune donnée n\'est envoyée à des serveurs externes.',
                       ),
                       SizedBox(height: 16),
                       _InfoCard(
                         icon: Icons.delete_outline,
                         title: 'Contrôle total',
-                        description: 'Tu peux supprimer définitivement toutes les données de l\'application en un clic à tout moment.',
+                        description:
+                            'Tu peux supprimer définitivement toutes les données de l\'application en un clic à tout moment.',
                       ),
                       SizedBox(height: 16),
                     ],
@@ -78,9 +81,9 @@ class ConfidencePage extends StatelessWidget {
                     elevation: 0,
                   ),
                   onPressed: () => Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (_) => const ConnexionPage()),
-                    (route) => false,
-                  ),
+        MaterialPageRoute(builder: (_) => const ConnexionPage()),
+        (route) => false,
+      ),
                   child: const Text(
                     'J\'ai compris',
                     style: TextStyle(
@@ -129,7 +132,11 @@ class _InfoCard extends StatelessWidget {
               color: ConfidencePage.accentPurple,
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: ConfidencePage.iconPurple, size: 24),
+            child: Icon(
+              icon,
+              color: ConfidencePage.iconPurple,
+              size: 24,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
