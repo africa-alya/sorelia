@@ -230,12 +230,40 @@ class DatabaseHelper {
   }
 
   // Moyenne de matière = moyenne simple des notes ramenées sur 20.
+  Future<double?> getMoyenneMatiere(int matiereId) async {
+    final notes = await getNotesPourMatiere(matiereId);
 
+    if (notes.isEmpty) {
+      return null;
+    }
+
+    double total = 0;
+
+    for (final note in notes) {
+      final noteSur20 = (note.valeur / note.bareme) * 20;
+      total += noteSur20;
+    }
+
+    return total / notes.length;
+}
   //Sprint a venir.....
 
   /// Moyenne générale pondérée par les coefficients des matières.
-  //Sprint a venir.....
-
+  
+  Future<double?> getMoyenneGenerale(int eleveId) async {
+    final matieres = await getMatieres(eleveId);
+    double sommePonderee = 0;
+    double totalCoef = 0;
+    for (final m in matieres) {
+      final moyenne = await getMoyenneMatiere(m.id!);
+      if (moyenne != null) {
+        sommePonderee += moyenne * m.coefficient;
+        totalCoef += m.coefficient;
+      }
+    }
+    if (totalCoef == 0) return null;
+    return sommePonderee / totalCoef;
+  }
   // ---------- COURS_EDT (emploi du temps) ----------
 
   Future<int> createCoursEDT(Cours c) async {
@@ -298,6 +326,16 @@ class DatabaseHelper {
             termine: Value(s.termine),
           ),
         );
+  }
+
+  Future<Etude?> getProchaineSeance(int eleveId) async {
+    final toutes = await getSeancesEtude(eleveId);
+    final maintenant = DateTime.now();
+    for (final s in toutes) {
+      if (s.termine) continue;
+      if (s.dateTimeDebut.isAfter(maintenant)) return s;
+    }
+    return null;
   }
 
   Future<List<Etude>> getSeancesEtude(int eleveId) async {
