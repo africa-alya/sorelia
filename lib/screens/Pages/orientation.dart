@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
 
-class AccueilPage extends StatefulWidget {
+class OrientationPage extends StatefulWidget {
   final int? eleveId;
-  const AccueilPage({super.key, this.eleveId});
+  const OrientationPage({super.key, this.eleveId});
   @override
-  State<AccueilPage> createState() => _AccueilPageState();
+  State<OrientationPage> createState() => _OrientationPageState();
 }
 
-class _AccueilPageState extends State<AccueilPage> {
+class _OrientationPageState extends State<OrientationPage> {
   Student? _eleve;
 
   @override
@@ -29,7 +29,8 @@ class _AccueilPageState extends State<AccueilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Sorélia"), centerTitle: true),
-      body: Center(child: Text("Bienvenu ${_eleve?.pseudonyme ?? 'User'}")),
+      body: Center(child: Text("Orientation de ${_eleve?.pseudonyme ?? 'User'}")),
     );
   }
 }
+

@@ -26,6 +26,7 @@ class DatabaseHelper {
     typeEnseignement: r.typeEnseignement,
     serie: r.serie,
     dateCreation: DateTime.parse(r.dateCreation),
+    systemeAcademique: r.systemeAcademique,
   );
 
   Matter _matiereFromRow(drift.Matiere r) => Matter(
@@ -121,6 +122,11 @@ class DatabaseHelper {
     return rows.map(_eleveFromRow).toList();
   }
 
+  Future<void> updateSystemeAcademique(int eleveId, String systeme) async {
+  await (db.update(db.eleves)..where((t) => t.id.equals(eleveId)))
+      .write(drift.ElevesCompanion(systemeAcademique: Value(systeme)));
+}
+
   // ---------- COEFFICIENT_REF ----------
 
   Future<List<CoefficientRef>> getCoefficientsRef({
@@ -215,23 +221,31 @@ class DatabaseHelper {
         );
   }
 
-  Future<List<Score>> getNotesPourMatiere(int matiereId) async {
+  Future<List<Score>> getNotesPourMatiere(int matiereId, {String? periode}) async {
     final query = db.select(db.notes)
-      ..where((t) => t.matiereId.equals(matiereId))
+      ..where((t) {
+        final isMatiere = t.matiereId.equals(matiereId);
+        // Si une période spécifique est demandée (ex: 'Trimestre 1'), on filtre dessus
+        if (periode != null && periode != 'Tout') {
+          return isMatiere & t.periode.equals(periode);
+        }
+        return isMatiere;
+      })
       ..orderBy([
         (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
       ]);
+
     final rows = await query.get();
     return rows.map(_noteFromRow).toList();
-  }
+}
 
   Future<void> deleteNote(int id) async {
     await (db.delete(db.notes)..where((t) => t.id.equals(id))).go();
   }
 
   // Moyenne de matière = moyenne simple des notes ramenées sur 20.
-  Future<double?> getMoyenneMatiere(int matiereId) async {
-    final notes = await getNotesPourMatiere(matiereId);
+  Future<double?> getMoyenneMatiere(int matiereId, {String? periode}) async {
+    final notes = await getNotesPourMatiere(matiereId, periode: periode);
 
     if (notes.isEmpty) {
       return null;
@@ -250,20 +264,48 @@ class DatabaseHelper {
 
   /// Moyenne générale pondérée par les coefficients des matières.
   
-  Future<double?> getMoyenneGenerale(int eleveId) async {
-    final matieres = await getMatieres(eleveId);
-    double sommePonderee = 0;
-    double totalCoef = 0;
-    for (final m in matieres) {
-      final moyenne = await getMoyenneMatiere(m.id!);
-      if (moyenne != null) {
-        sommePonderee += moyenne * m.coefficient;
-        totalCoef += m.coefficient;
+  Future<double?> getMoyenneGenerale(int eleveId, {String? periode}) async {
+  final matieres = await getMatieres(eleveId);
+  double sommePonderee = 0;
+  double totalCoef = 0;
+
+  for (final m in matieres) {
+    final moyenne = await getMoyenneMatiere(m.id!, periode: periode);
+    if (moyenne != null) {
+      sommePonderee += moyenne * m.coefficient;
+      totalCoef += m.coefficient;
+    }
+  }
+
+  if (totalCoef == 0) return null;
+  return sommePonderee / totalCoef;
+}
+
+
+  Future<double?> getMoyenneAnnuelle(int eleveId) async {
+    final eleve = await getEleveById(eleveId);
+    if (eleve == null) return null;
+
+    // Déterminer les périodes selon le système de l'élève en BDD
+    final isTrimestre = eleve.systemeAcademique == 'trimester';
+    final periodes = isTrimestre
+        ? ['Trimestre 1', 'Trimestre 2', 'Trimestre 3']
+        : ['Semestre 1', 'Semestre 2'];
+
+    double sommeMoyennes = 0;
+    int periodesAvecNotes = 0;
+
+    for (final p in periodes) {
+      final moy = await getMoyenneGenerale(eleveId, periode: p);
+      if (moy != null) {
+        sommeMoyennes += moy;
+        periodesAvecNotes++;
       }
     }
-    if (totalCoef == 0) return null;
-    return sommePonderee / totalCoef;
-  }
+
+    if (periodesAvecNotes == 0) return null;
+    return sommeMoyennes / periodesAvecNotes;
+}
   // ---------- COURS_EDT (emploi du temps) ----------
 
   Future<int> createCoursEDT(Cours c) async {

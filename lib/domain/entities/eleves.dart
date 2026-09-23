@@ -13,6 +13,10 @@ class Student {
   final String? serie;
   final DateTime dateCreation;
 
+  /// TRIMESTRE ou SEMESTRE (voir SystemeAcademique). Null tant que
+  /// l'élève n'a pas encore répondu au dialogue de choix.
+  final String? systemeAcademique;
+
   Student({
     this.id,
     required this.pseudonyme,
@@ -22,6 +26,7 @@ class Student {
     required this.typeEnseignement,
     this.serie,
     DateTime? dateCreation,
+    this.systemeAcademique,
   }) : dateCreation = dateCreation ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
@@ -35,6 +40,7 @@ class Student {
       'type_enseignement': typeEnseignement,
       'serie': serie,
       'date_creation': dateCreation.toIso8601String(),
+      'systeme_academique': systemeAcademique,
     };
   }
 
@@ -48,6 +54,23 @@ class Student {
       typeEnseignement: map['type_enseignement'] as String,
       serie: map['serie'] as String?,
       dateCreation: DateTime.parse(map['date_creation'] as String),
+      systemeAcademique: map['systeme_academique'] as String?,
+    );
+  }
+
+  /// Copie l'élève avec un ou plusieurs champs modifiés, sans avoir à
+  /// tout retaper. Pratique après le choix trimestre/semestre.
+  Student copyWith({String? systemeAcademique}) {
+    return Student(
+      id: id,
+      pseudonyme: pseudonyme,
+      empreintePin: empreintePin,
+      telephone: telephone,
+      niveau: niveau,
+      typeEnseignement: typeEnseignement,
+      serie: serie,
+      dateCreation: dateCreation,
+      systemeAcademique: systemeAcademique ?? this.systemeAcademique,
     );
   }
 }
@@ -57,4 +80,11 @@ class TypeEnseignement {
   static const general = 'GENERAL';
   static const technique = 'TECHNIQUE';
   static const values = [general, technique];
+}
+
+/// Valeurs autorisées pour `systeme_academique`.
+class SystemeAcademique {
+  static const trimestre = 'TRIMESTRE';
+  static const semestre = 'SEMESTRE';
+  static const values = [trimestre, semestre];
 }

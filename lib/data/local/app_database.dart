@@ -28,6 +28,8 @@ class Eleves extends Table {
   TextColumn get typeEnseignement => text()();
   TextColumn get serie => text().nullable()();
   TextColumn get dateCreation => text()();
+
+  TextColumn get systemeAcademique => text().nullable()();
 }
 
 class CoefficientRefs extends Table {
