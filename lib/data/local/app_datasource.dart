@@ -290,7 +290,7 @@ class DatabaseHelper {
     if (eleve == null) return null;
 
     // Déterminer les périodes selon le système de l'élève en BDD
-    final isTrimestre = eleve.systemeAcademique == 'trimester';
+    final isTrimestre = eleve.systemeAcademique == SystemeAcademique.trimestre;
     final periodes = isTrimestre
         ? ['Trimestre 1', 'Trimestre 2', 'Trimestre 3']
         : ['Semestre 1', 'Semestre 2'];

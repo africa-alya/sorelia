@@ -49,8 +49,13 @@ class _HomePageState extends State<HomePage> {
     }
 
     final eleve = await DatabaseHelper.instance.getEleveById(id);
+
+    final periode = eleve?.systemeAcademique == SystemeAcademique.trimestre
+        ? 'Trimestre 1'
+        : 'Semestre 1';
     final moyGenerale = await DatabaseHelper.instance.getMoyenneGenerale(
       widget.eleveId,
+      periode: periode,
     );
     final prochaine = await DatabaseHelper.instance.getProchaineSeance(id);
     final matieres = await DatabaseHelper.instance.getMatieres(widget.eleveId);
@@ -367,56 +372,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class _CarteInfo extends StatelessWidget {
-  final String titre;
-  final String valeur;
-  final Color couleurValeur;
-  final String? sousTitre;
-
-  const _CarteInfo({
-    required this.titre,
-    required this.valeur,
-    required this.couleurValeur,
-    this.sousTitre,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            titre,
-            style: const TextStyle(fontSize: 12, color: Colors.black54),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            valeur,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: couleurValeur,
-            ),
-          ),
-          if (sousTitre != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              sousTitre!,
-              style: const TextStyle(fontSize: 11, color: Colors.black45),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 class _CartePastille extends StatelessWidget {
   final IconData icone;
   final Color couleur;
@@ -546,14 +501,12 @@ Widget _buildCard({required Widget child}) {
 
 class _LineChartPainter extends CustomPainter {
   final double? moyenneGenerale;
-  final double maxGrade;
-  final double threshold;
 
-  _LineChartPainter({
-    required this.moyenneGenerale,
-    this.maxGrade = 20.0,
-    this.threshold = 10.0,
-  });
+  // Déclaration en constantes fixes pour éviter les paramètres inutilisés
+  static const double maxGrade = 20.0;
+  static const double threshold = 10.0;
+
+  _LineChartPainter({required this.moyenneGenerale});
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -102,7 +102,7 @@ class MatiereNoteSection extends StatelessWidget {
                     child: ListView.separated(
                       controller: controller,
                       itemCount: matieresDisponibles.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      separatorBuilder: (_, _) => const Divider(height: 1),
                       itemBuilder: (context, index) {
                         final item = matieresDisponibles[index];
 
@@ -260,11 +260,10 @@ class MatiereNoteSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. En-tête toujours présent (permet d'ajouter d'autres matières à tout moment)
         _buildHeader(context),
         const SizedBox(height: 12),
 
-        // 2. Affichage si aucune matière n'a encore été ajoutée
+        //  Affichage si aucune matière n'a encore été ajoutée
         if (matieres.isEmpty)
           Container(
             width: double.infinity,
@@ -300,7 +299,7 @@ class MatiereNoteSection extends StatelessWidget {
             ),
           )
         else
-          // 3. Liste des cartes de matières
+          //  Liste des cartes de matières
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -352,7 +351,12 @@ class MatiereCard extends StatelessWidget {
 
   double? get _moyenneMatiere {
     if (notes.isEmpty) return null;
-    final sum = notes.fold<double>(0, (prev, n) => prev + n.valeur);
+
+    final sum = notes.fold<double>(
+      0,
+      (prev, n) => prev + (n.valeur / n.bareme) * 20,
+    );
+
     return sum / notes.length;
   }
 
@@ -370,7 +374,6 @@ class MatiereCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Ligne 1 : Nom de la matière + Badge Coefficient
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -407,7 +410,6 @@ class MatiereCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Ligne 2 : Liste des notes + Bouton/Moyenne
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,

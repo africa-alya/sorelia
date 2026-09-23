@@ -5,7 +5,7 @@ import 'package:sorelia/core/security/pin_service.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sorelia/screens/accueil.dart';
+import 'package:sorelia/screens/onglets.dart';
 import 'package:sorelia/screens/inscription.dart';
 
 class ConnexionPage extends StatefulWidget {

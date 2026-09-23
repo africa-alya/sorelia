@@ -104,7 +104,6 @@ class _NotePageState extends State<NotePage> {
 
     if (!mounted) return;
 
-    // 🟢 Correction : On recharge complètement l'élève pour mettre à jour _eleve et l'IHM
     await _charger(widget.eleveId, isRefreshing: true);
   }
 
@@ -152,7 +151,6 @@ class _NotePageState extends State<NotePage> {
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              // 🟢 Si le système académique n'est pas encore configuré
               if (_eleve?.systemeAcademique == null) ...[
                 Card(
                   elevation: 0,
@@ -194,7 +192,7 @@ class _NotePageState extends State<NotePage> {
                   ),
                 ),
               ] else ...[
-                // 🟢 Contenu principal
+                //  Contenu principal
                 OverallAverageHeader(
                   academicSystem: systeme,
                   selectedPeriod: _selectedPeriod,
