@@ -9,7 +9,6 @@ class MatiereReference {
     required this.serie,
     required this.matiere,
     required this.coefficient,
-    
   });
 
   factory MatiereReference.fromJson(Map<String, dynamic> json) {

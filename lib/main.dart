@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'screens/onboarding.dart';
 
-
 void main() {
   runApp(const SoreliaApp());
 }

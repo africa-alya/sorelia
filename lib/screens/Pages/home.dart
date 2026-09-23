@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Text(
                           getGreeting(),
-                          style:const TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -136,7 +136,8 @@ class _HomePageState extends State<HomePage> {
                       radius: 26,
                       backgroundColor: const Color(0xFFE5A024),
                       child: Text(
-                        (_eleve?.pseudonyme != null && _eleve!.pseudonyme.isNotEmpty)
+                        (_eleve?.pseudonyme != null &&
+                                _eleve!.pseudonyme.isNotEmpty)
                             ? _eleve!.pseudonyme[0].toUpperCase()
                             : 'U',
                         style: const TextStyle(
@@ -191,7 +192,9 @@ class _HomePageState extends State<HomePage> {
                               Text(
                                 _moyenneGenerale == null
                                     ? '—'
-                                    : _moyenneGenerale!.toStringAsFixed(1).replaceAll('.', ','),
+                                    : _moyenneGenerale!
+                                          .toStringAsFixed(1)
+                                          .replaceAll('.', ','),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 28,
@@ -208,7 +211,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                               const SizedBox(width: 6),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFDCFCE7),
                                   borderRadius: BorderRadius.circular(6),
@@ -315,10 +321,13 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(height: 24),
-              const Text('À retenir', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text(
+                'À retenir',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 12),
 
-             // 1. CARTE POINT FORT
+              // 1. CARTE POINT FORT
               _CartePastille(
                 icone: Icons.star_rounded,
                 couleur: const Color(0xFF16A34A), // Vert
@@ -339,7 +348,10 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(height: 24),
-              const Text('Conseil du jour', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text(
+                'Conseil du jour',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
               Text(
                 _aRenforcer != null
@@ -506,11 +518,7 @@ class _CartePastille extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: couleur,
-                    size: 24,
-                  ),
+                  Icon(Icons.chevron_right_rounded, color: couleur, size: 24),
                 ],
               ),
             ],
@@ -529,11 +537,7 @@ Widget _buildCard({required Widget child}) {
       borderRadius: BorderRadius.circular(12),
       border: Border.all(color: Colors.black12),
       boxShadow: const [
-        BoxShadow(
-          color: Colors.black12,
-          blurRadius: 4,
-          offset: Offset(0, 2),
-        ),
+        BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
       ],
     ),
     child: child,
@@ -618,8 +622,9 @@ class _LineChartPainter extends CustomPainter {
 
     // Détermination de la couleur (Rouge si < 10, Vert si >= 10)
     final bool isPassing = clampedAvg >= threshold;
-    final Color mainColor =
-        isPassing ? const Color(0xFF0B6E4F) : const Color(0xFFD97706);
+    final Color mainColor = isPassing
+        ? const Color(0xFF0B6E4F)
+        : const Color(0xFFD97706);
 
     // 5. Ligne horizontale représentant la moyenne actuelle
     final linePaint = Paint()
@@ -627,11 +632,7 @@ class _LineChartPainter extends CustomPainter {
       ..strokeWidth = 2.5
       ..style = PaintingStyle.stroke;
 
-    canvas.drawLine(
-      Offset(0, yPos),
-      Offset(size.width, yPos),
-      linePaint,
-    );
+    canvas.drawLine(Offset(0, yPos), Offset(size.width, yPos), linePaint);
 
     // 6. Point indicateur au centre avec la valeur textuelle
     final pointPaint = Paint()

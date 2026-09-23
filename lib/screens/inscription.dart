@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sorelia/core/security/pin_service.dart';
@@ -7,7 +8,6 @@ import 'package:sorelia/domain/entities/eleves.dart';
 import 'package:sorelia/screens/confidence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sorelia/domain/entities/json.dart';
-
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -59,11 +59,12 @@ class _InscriptionPageState extends State<InscriptionPage> {
   void initState() {
     super.initState();
 
-     _chargerNiveaux(); 
+    _chargerNiveaux();
   }
 
   Future<void> _chargerNiveaux() async {
-    final niveaux = await ReferenceMatieresService.instance.getNiveauxDisponibles();
+    final niveaux = await ReferenceMatieresService.instance
+        .getNiveauxDisponibles();
     setState(() {
       _niveaux = niveaux;
       _niveauxCharges = true;
@@ -71,12 +72,13 @@ class _InscriptionPageState extends State<InscriptionPage> {
         _niveau = niveaux.first;
       }
     });
-    _chargerSeries(_niveau); // une fois le niveau confirmé, on charge ses séries
-}
+    _chargerSeries(
+      _niveau,
+    ); // une fois le niveau confirmé, on charge ses séries
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     if (!_niveauxCharges) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -348,14 +350,16 @@ class _InscriptionPageState extends State<InscriptionPage> {
   }
 
   Future<void> _chargerSeries(String niveau) async {
-    final series = await ReferenceMatieresService.instance.getSeriesPourNiveau(niveau);
+    final series = await ReferenceMatieresService.instance.getSeriesPourNiveau(
+      niveau,
+    );
     setState(() {
       _seriesDisponibles = series;
       if (!series.contains(_serie)) {
         _serie = series.isNotEmpty ? series.first : null;
       }
     });
-}
+  }
 
   // --- DÉCORATION COMMUNE POUR TOUS LES CHAMPS ---
   InputDecoration _buildInputDecoration({

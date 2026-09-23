@@ -396,7 +396,6 @@ class ConnexionPageState extends State<ConnexionPage> {
 
     if (!mounted) return;
 
-    
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => AccueilPage(eleveId: eleveId)),
       (route) => false,

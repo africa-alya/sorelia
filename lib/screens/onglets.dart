@@ -8,7 +8,7 @@ import 'package:sorelia/screens/Pages/profil.dart';
 
 class AccueilPage extends StatefulWidget {
   final int eleveId;
-  const AccueilPage({super.key,required this.eleveId});
+  const AccueilPage({super.key, required this.eleveId});
   @override
   State<AccueilPage> createState() => _AccueilPageState();
 }
@@ -16,13 +16,13 @@ class AccueilPage extends StatefulWidget {
 class _AccueilPageState extends State<AccueilPage> {
   int _currentIndex = 0;
 
-    List<Widget> get _pages => [
-      HomePage(eleveId: widget.eleveId),
-      NotePage(eleveId: widget.eleveId),
-      const PlanningPage(),
-      const OrientationPage(),
-      const ProfilPage(),
-    ];
+  List<Widget> get _pages => [
+    HomePage(eleveId: widget.eleveId),
+    NotePage(eleveId: widget.eleveId),
+    const PlanningPage(),
+    const OrientationPage(),
+    const ProfilPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,7 @@ class _AccueilPageState extends State<AccueilPage> {
       body: SafeArea(child: _pages[_currentIndex]),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Colors.black12, width: 1.0),
-          ),
+          border: Border(top: BorderSide(color: Colors.black12, width: 1.0)),
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,

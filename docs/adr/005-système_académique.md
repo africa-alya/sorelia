@@ -1,12 +1,12 @@
 # Documentation du Système Académique & Structure des Notes
 
-## 📌 Contextualisation
+##  Contextualisation
 
 Afin d'assurer une gestion complète du parcours de l'étudiant (calcul des moyennes, suivi des semestres et gestion des coefficients), nous avons fait évoluer l'architecture locale et l'interface utilisateur.
 
 ---
 
-## 🎯 Raisons de la création de la table académique
+##  Raisons de la création de la table académique
 
 La création d'une table dédiée au **système académique** s'est avérée nécessaire pour les motifs suivants :
 
@@ -24,7 +24,7 @@ La création d'une table dédiée au **système académique** s'est avérée né
 
 ---
 
-## 🗄️ Impact sur la Base de Données & l'UI
+## Impact sur la Base de Données & l'UI
 
 - **Base de données :** Ajout des entités pour le système académique et les notes (migration Drift).
 - **Interface Utilisateur :**
@@ -33,7 +33,7 @@ La création d'une table dédiée au **système académique** s'est avérée né
 
 ---
 
-## 🚀 Prochaines Étapes
+##  Prochaines Étapes
 
 - Completion des fonctionnalités sur la page de gestion des notes.
 - Finalisation des tests unitaires pour les calculs de moyennes.

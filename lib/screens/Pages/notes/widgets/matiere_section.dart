@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
@@ -6,16 +7,14 @@ import 'package:sorelia/domain/entities/matiere.dart';
 import 'package:sorelia/domain/entities/note.dart';
 import 'package:sorelia/domain/entities/json.dart';
 
-
-
 class MatiereNoteSection extends StatelessWidget {
   final int eleveId;
-  final String classeEleve; 
+  final String classeEleve;
   final String serieEleves;
   final List<Matter> matieres;
   final String selectedPeriod;
   final Function(Matter matiere) onAddNotePressed;
-  final VoidCallback onMatiereAdded; 
+  final VoidCallback onMatiereAdded;
 
   const MatiereNoteSection({
     super.key,
@@ -33,7 +32,9 @@ class MatiereNoteSection extends StatelessWidget {
     required String niveau,
     required String serie,
   }) async {
-    final String rawJson = await rootBundle.loadString('assets/coefficients/coefficientref.json');
+    final String rawJson = await rootBundle.loadString(
+      'assets/coefficients/coefficientref.json',
+    );
     final List<dynamic> list = json.decode(rawJson);
 
     return list
@@ -44,8 +45,7 @@ class MatiereNoteSection extends StatelessWidget {
 
   /// Ouvre le catalogue des matières disponibles
   void _afficherCatalogueMatieres(BuildContext context) async {
-    
-    final String niveauEleve = classeEleve; 
+    final String niveauEleve = classeEleve;
     final String serieEleve = serieEleves;
 
     final matieresDisponibles = await _chargerMatieresFiltrees(
@@ -105,10 +105,11 @@ class MatiereNoteSection extends StatelessWidget {
                       separatorBuilder: (_, __) => const Divider(height: 1),
                       itemBuilder: (context, index) {
                         final item = matieresDisponibles[index];
-                        
+
                         // Vérifie si la matière a déjà été ajoutée par l'élève
                         final dejaAjoutee = matieres.any(
-                          (m) => m.nom.toLowerCase() == item.matiere.toLowerCase(),
+                          (m) =>
+                              m.nom.toLowerCase() == item.matiere.toLowerCase(),
                         );
 
                         return ListTile(
@@ -193,11 +194,11 @@ class MatiereNoteSection extends StatelessWidget {
       // Insertion dans la BDD Drift
       final newMatiere = Matter(
         nom: ref.matiere,
-        serie: ref.serie, 
+        serie: ref.serie,
         eleveId: eleveId,
         coefficient: ref.coefficient.toDouble(),
       );
-      
+
       final idCree = await DatabaseHelper.instance.createMatiere(newMatiere);
 
       if (context.mounted && idCree > 0) {
@@ -275,7 +276,11 @@ class MatiereNoteSection extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Icon(Icons.menu_book_rounded, size: 48, color: Colors.grey[400]),
+                Icon(
+                  Icons.menu_book_rounded,
+                  size: 48,
+                  color: Colors.grey[400],
+                ),
                 const SizedBox(height: 12),
                 Text(
                   'Aucune matière disponible',
@@ -381,7 +386,10 @@ class MatiereCard extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
@@ -412,36 +420,38 @@ class MatiereCard extends StatelessWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : notes.isEmpty
-                        ? Text(
-                            'Aucune note',
-                            style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-                          )
-                        : Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: notes.map((note) {
-                              return Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF14284B).withAlpha(15),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  note.valeur.toStringAsFixed(
-                                    note.valeur.truncateToDouble() == note.valeur ? 0 : 2,
-                                  ),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                    color: Color(0xFF14284B),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
+                    ? Text(
+                        'Aucune note',
+                        style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                      )
+                    : Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: notes.map((note) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF14284B).withAlpha(15),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              note.valeur.toStringAsFixed(
+                                note.valeur.truncateToDouble() == note.valeur
+                                    ? 0
+                                    : 2,
+                              ),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Color(0xFF14284B),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
               ),
               const SizedBox(width: 8),
 
@@ -452,7 +462,9 @@ class MatiereCard extends StatelessWidget {
               ),
 
               Text(
-                moyenne != null ? '${moyenne.toStringAsFixed(2)} / 20' : '-- / 20',
+                moyenne != null
+                    ? '${moyenne.toStringAsFixed(2)} / 20'
+                    : '-- / 20',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,

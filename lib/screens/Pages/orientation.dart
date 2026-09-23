@@ -29,8 +29,9 @@ class _OrientationPageState extends State<OrientationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Sorélia"), centerTitle: true),
-      body: Center(child: Text("Orientation de ${_eleve?.pseudonyme ?? 'User'}")),
+      body: Center(
+        child: Text("Orientation de ${_eleve?.pseudonyme ?? 'User'}"),
+      ),
     );
   }
 }
-

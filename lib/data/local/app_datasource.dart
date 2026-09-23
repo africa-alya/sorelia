@@ -123,9 +123,10 @@ class DatabaseHelper {
   }
 
   Future<void> updateSystemeAcademique(int eleveId, String systeme) async {
-  await (db.update(db.eleves)..where((t) => t.id.equals(eleveId)))
-      .write(drift.ElevesCompanion(systemeAcademique: Value(systeme)));
-}
+    await (db.update(db.eleves)..where((t) => t.id.equals(eleveId))).write(
+      drift.ElevesCompanion(systemeAcademique: Value(systeme)),
+    );
+  }
 
   // ---------- COEFFICIENT_REF ----------
 
@@ -221,7 +222,10 @@ class DatabaseHelper {
         );
   }
 
-  Future<List<Score>> getNotesPourMatiere(int matiereId, {String? periode}) async {
+  Future<List<Score>> getNotesPourMatiere(
+    int matiereId, {
+    String? periode,
+  }) async {
     final query = db.select(db.notes)
       ..where((t) {
         final isMatiere = t.matiereId.equals(matiereId);
@@ -237,7 +241,7 @@ class DatabaseHelper {
 
     final rows = await query.get();
     return rows.map(_noteFromRow).toList();
-}
+  }
 
   Future<void> deleteNote(int id) async {
     await (db.delete(db.notes)..where((t) => t.id.equals(id))).go();
@@ -259,28 +263,27 @@ class DatabaseHelper {
     }
 
     return total / notes.length;
-}
+  }
   //Sprint a venir.....
 
   /// Moyenne générale pondérée par les coefficients des matières.
-  
+
   Future<double?> getMoyenneGenerale(int eleveId, {String? periode}) async {
-  final matieres = await getMatieres(eleveId);
-  double sommePonderee = 0;
-  double totalCoef = 0;
+    final matieres = await getMatieres(eleveId);
+    double sommePonderee = 0;
+    double totalCoef = 0;
 
-  for (final m in matieres) {
-    final moyenne = await getMoyenneMatiere(m.id!, periode: periode);
-    if (moyenne != null) {
-      sommePonderee += moyenne * m.coefficient;
-      totalCoef += m.coefficient;
+    for (final m in matieres) {
+      final moyenne = await getMoyenneMatiere(m.id!, periode: periode);
+      if (moyenne != null) {
+        sommePonderee += moyenne * m.coefficient;
+        totalCoef += m.coefficient;
+      }
     }
+
+    if (totalCoef == 0) return null;
+    return sommePonderee / totalCoef;
   }
-
-  if (totalCoef == 0) return null;
-  return sommePonderee / totalCoef;
-}
-
 
   Future<double?> getMoyenneAnnuelle(int eleveId) async {
     final eleve = await getEleveById(eleveId);
@@ -305,7 +308,7 @@ class DatabaseHelper {
 
     if (periodesAvecNotes == 0) return null;
     return sommeMoyennes / periodesAvecNotes;
-}
+  }
   // ---------- COURS_EDT (emploi du temps) ----------
 
   Future<int> createCoursEDT(Cours c) async {

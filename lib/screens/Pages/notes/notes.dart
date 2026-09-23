@@ -165,11 +165,18 @@ class _NotePageState extends State<NotePage> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        const Icon(Icons.info_outline, color: Colors.amber, size: 36),
+                        const Icon(
+                          Icons.info_outline,
+                          color: Colors.amber,
+                          size: 36,
+                        ),
                         const SizedBox(height: 8),
                         const Text(
                           "Système académique non sélectionné",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         const Text(
@@ -202,7 +209,7 @@ class _NotePageState extends State<NotePage> {
                 else
                   MatiereNoteSection(
                     matieres: _matieres,
-                    classeEleve: _eleve?.niveau ?? '', // 
+                    classeEleve: _eleve?.niveau ?? '', //
                     serieEleves: _eleve?.serie ?? '',
                     selectedPeriod: _selectedPeriod,
                     onAddNotePressed: (matiere) {
