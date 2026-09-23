@@ -26,6 +26,7 @@ class DatabaseHelper {
     typeEnseignement: r.typeEnseignement,
     serie: r.serie,
     dateCreation: DateTime.parse(r.dateCreation),
+    systemeAcademique: r.systemeAcademique,
   );
 
   Matter _matiereFromRow(drift.Matiere r) => Matter(
@@ -119,6 +120,12 @@ class DatabaseHelper {
       ..orderBy([(t) => OrderingTerm(expression: t.dateCreation)]);
     final rows = await query.get();
     return rows.map(_eleveFromRow).toList();
+  }
+
+  Future<void> updateSystemeAcademique(int eleveId, String systeme) async {
+    await (db.update(db.eleves)..where((t) => t.id.equals(eleveId))).write(
+      drift.ElevesCompanion(systemeAcademique: Value(systeme)),
+    );
   }
 
   // ---------- COEFFICIENT_REF ----------
@@ -215,12 +222,23 @@ class DatabaseHelper {
         );
   }
 
-  Future<List<Score>> getNotesPourMatiere(int matiereId) async {
+  Future<List<Score>> getNotesPourMatiere(
+    int matiereId, {
+    String? periode,
+  }) async {
     final query = db.select(db.notes)
-      ..where((t) => t.matiereId.equals(matiereId))
+      ..where((t) {
+        final isMatiere = t.matiereId.equals(matiereId);
+        // Si une période spécifique est demandée (ex: 'Trimestre 1'), on filtre dessus
+        if (periode != null && periode != 'Tout') {
+          return isMatiere & t.periode.equals(periode);
+        }
+        return isMatiere;
+      })
       ..orderBy([
         (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
       ]);
+
     final rows = await query.get();
     return rows.map(_noteFromRow).toList();
   }
@@ -230,12 +248,67 @@ class DatabaseHelper {
   }
 
   // Moyenne de matière = moyenne simple des notes ramenées sur 20.
+  Future<double?> getMoyenneMatiere(int matiereId, {String? periode}) async {
+    final notes = await getNotesPourMatiere(matiereId, periode: periode);
 
+    if (notes.isEmpty) {
+      return null;
+    }
+
+    double total = 0;
+
+    for (final note in notes) {
+      final noteSur20 = (note.valeur / note.bareme) * 20;
+      total += noteSur20;
+    }
+
+    return total / notes.length;
+  }
   //Sprint a venir.....
 
   /// Moyenne générale pondérée par les coefficients des matières.
-  //Sprint a venir.....
 
+  Future<double?> getMoyenneGenerale(int eleveId, {String? periode}) async {
+    final matieres = await getMatieres(eleveId);
+    double sommePonderee = 0;
+    double totalCoef = 0;
+
+    for (final m in matieres) {
+      final moyenne = await getMoyenneMatiere(m.id!, periode: periode);
+      if (moyenne != null) {
+        sommePonderee += moyenne * m.coefficient;
+        totalCoef += m.coefficient;
+      }
+    }
+
+    if (totalCoef == 0) return null;
+    return sommePonderee / totalCoef;
+  }
+
+  Future<double?> getMoyenneAnnuelle(int eleveId) async {
+    final eleve = await getEleveById(eleveId);
+    if (eleve == null) return null;
+
+    // Déterminer les périodes selon le système de l'élève en BDD
+    final isTrimestre = eleve.systemeAcademique == SystemeAcademique.trimestre;
+    final periodes = isTrimestre
+        ? ['Trimestre 1', 'Trimestre 2', 'Trimestre 3']
+        : ['Semestre 1', 'Semestre 2'];
+
+    double sommeMoyennes = 0;
+    int periodesAvecNotes = 0;
+
+    for (final p in periodes) {
+      final moy = await getMoyenneGenerale(eleveId, periode: p);
+      if (moy != null) {
+        sommeMoyennes += moy;
+        periodesAvecNotes++;
+      }
+    }
+
+    if (periodesAvecNotes == 0) return null;
+    return sommeMoyennes / periodesAvecNotes;
+  }
   // ---------- COURS_EDT (emploi du temps) ----------
 
   Future<int> createCoursEDT(Cours c) async {
@@ -298,6 +371,16 @@ class DatabaseHelper {
             termine: Value(s.termine),
           ),
         );
+  }
+
+  Future<Etude?> getProchaineSeance(int eleveId) async {
+    final toutes = await getSeancesEtude(eleveId);
+    final maintenant = DateTime.now();
+    for (final s in toutes) {
+      if (s.termine) continue;
+      if (s.dateTimeDebut.isAfter(maintenant)) return s;
+    }
+    return null;
   }
 
   Future<List<Etude>> getSeancesEtude(int eleveId) async {

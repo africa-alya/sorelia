@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
 
-class AccueilPage extends StatefulWidget {
+class ProfilPage extends StatefulWidget {
   final int? eleveId;
-  const AccueilPage({super.key, this.eleveId});
+  const ProfilPage({super.key, this.eleveId});
   @override
-  State<AccueilPage> createState() => _AccueilPageState();
+  State<ProfilPage> createState() => _ProfilPageState();
 }
 
-class _AccueilPageState extends State<AccueilPage> {
+class _ProfilPageState extends State<ProfilPage> {
   Student? _eleve;
 
   @override
@@ -29,7 +29,7 @@ class _AccueilPageState extends State<AccueilPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Sorélia"), centerTitle: true),
-      body: Center(child: Text("Bienvenu ${_eleve?.pseudonyme ?? 'User'}")),
+      body: Center(child: Text("Profil de ${_eleve?.pseudonyme ?? 'User'}")),
     );
   }
 }

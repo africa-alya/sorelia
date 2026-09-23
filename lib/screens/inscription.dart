@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sorelia/core/security/pin_service.dart';
@@ -5,6 +7,7 @@ import 'package:sorelia/data/local/app_datasource.dart';
 import 'package:sorelia/domain/entities/eleves.dart';
 import 'package:sorelia/screens/confidence.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sorelia/domain/entities/json.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -49,16 +52,37 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
   // Liste deroulante
   final List<String> _teachingTypes = ['GENERAL', 'TECHNIQUE'];
-  static const _niveaux = ['6e', '5e', '4e', '3e', '2nde', '1ere', 'Tle'];
+  List<String> _niveaux = [];
+  bool _niveauxCharges = false;
 
   @override
   void initState() {
     super.initState();
-    _chargerSeries(_niveau); // charge les séries dès l'ouverture
+
+    _chargerNiveaux();
+  }
+
+  Future<void> _chargerNiveaux() async {
+    final niveaux = await ReferenceMatieresService.instance
+        .getNiveauxDisponibles();
+    setState(() {
+      _niveaux = niveaux;
+      _niveauxCharges = true;
+      if (!niveaux.contains(_niveau) && niveaux.isNotEmpty) {
+        _niveau = niveaux.first;
+      }
+    });
+    _chargerSeries(
+      _niveau,
+    ); // une fois le niveau confirmé, on charge ses séries
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_niveauxCharges) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -326,10 +350,11 @@ class _InscriptionPageState extends State<InscriptionPage> {
   }
 
   Future<void> _chargerSeries(String niveau) async {
-    final series = await DatabaseHelper.instance.getSeriesDisponibles(niveau);
+    final series = await ReferenceMatieresService.instance.getSeriesPourNiveau(
+      niveau,
+    );
     setState(() {
       _seriesDisponibles = series;
-      // Si l'ancienne série n'existe plus pour ce niveau, on réinitialise
       if (!series.contains(_serie)) {
         _serie = series.isNotEmpty ? series.first : null;
       }
@@ -429,5 +454,46 @@ class _InscriptionPageState extends State<InscriptionPage> {
         _error = 'Une erreur est survenue, réessaie.';
       });
     }
+  }
+}
+
+class ReferenceMatieresService {
+  ReferenceMatieresService._internal();
+  static final ReferenceMatieresService instance =
+      ReferenceMatieresService._internal();
+
+  List<MatiereReference>? _cache;
+
+  // Ordre pédagogique attendu ; on ne garde que ceux réellement présents
+  // dans le JSON, au cas où le fichier ne couvrirait pas encore tout.
+  static const _ordreNiveaux = ['6e', '5e', '4e', '3e', '2nde', '1ere', 'Tle'];
+
+  Future<List<MatiereReference>> _charger() async {
+    if (_cache != null) return _cache!;
+    final jsonString = await rootBundle.loadString(
+      'assets/coefficients/coefficientref.json',
+    );
+    final List<dynamic> lignes = jsonDecode(jsonString);
+    _cache = lignes
+        .map((l) => MatiereReference.fromJson(l as Map<String, dynamic>))
+        .toList();
+    return _cache!;
+  }
+
+  Future<List<String>> getNiveauxDisponibles() async {
+    final lignes = await _charger();
+    final presents = lignes.map((l) => l.niveau).toSet();
+    return _ordreNiveaux.where(presents.contains).toList();
+  }
+
+  Future<List<String>> getSeriesPourNiveau(String niveau) async {
+    final lignes = await _charger();
+    final series = lignes
+        .where((l) => l.niveau == niveau)
+        .map((l) => l.serie)
+        .toSet()
+        .toList();
+    series.sort();
+    return series;
   }
 }
